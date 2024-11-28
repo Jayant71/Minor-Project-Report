@@ -23,8 +23,16 @@
 
 \titleformat{\chapter}[display]
   {\normalfont\huge\bfseries}
-  {\chaptertitlename\ \thechapter}{20pt}{\Huge}
-\titlespacing*{\chapter}{0pt}{0pt}{40pt}
+  {\chaptertitlename\ \thechapter}{10pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{-10pt}{40pt}
+
+
+
+\titlespacing*{\section}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
+\titlespacing*{\subsection}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+%
+
 
 % Define the geometry of the page
 \geometry{
@@ -34,8 +42,6 @@
   top=17mm,
   bottom=20mm
 }
-
-
 
 % Define the border using TikZ
 \backgroundsetup{
@@ -85,15 +91,25 @@
 \include{declarations/acknowledgement.tex}
 
 
-\tableofcontents
 
+\input{modules/header.tex}
+\vspace{-2cm}
 
+\renewcommand{\contentsname}{\begin{center}\textbf{\Large TABLE OF CONTENTS\\ \vspace{-1cm}}\end{center} } % Center the title
+
+\addcontentsline{toc}{section}{\textbf{Table of Contents}}
+{\normalsize \tableofcontents}
+  
+  
 \include{otherpages/abbreviation.tex}
 
 
 
-\newpage
-\listoffigures
+\input{modules/header.tex}
+\vspace{-2cm}
+\renewcommand{\listfigurename}{\begin{center}\textbf{\Large LIST OF FIGURES \\ \vspace{-1cm}}\end{center} } % Center the title
+{\normalsize \listoffigures}
+\addcontentsline{toc}{section}{\textbf{List of Figures}}
 
 \include{otherpages/abstract.tex}
 
@@ -114,8 +130,6 @@
  
 \newpage
 \include{chapters/Conclusion.tex}
-
-
 
 
 \newpage
