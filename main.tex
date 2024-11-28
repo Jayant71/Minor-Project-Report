@@ -31,7 +31,7 @@
 \titlespacing*{\section}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
 \titlespacing*{\subsection}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
 
-%
+
 
 
 % Define the geometry of the page
@@ -48,14 +48,14 @@
   scale=1,
   color=black,
   opacity=1,
-  angle=0,
+  angle=0, 
   position=current page.south west,
   vshift=10mm,
   hshift=10mm,
   contents={
     \begin{tikzpicture}[remember picture,overlay]
       \draw[line width=2pt] (0,0) rectangle (\paperwidth-20mm,\paperheight-20mm);
-    \end{tikzpicture}
+    \end{tikzpicture} 
   }
 }
 
@@ -70,11 +70,17 @@
 \setlength{\headsep}{20pt} % Adjust header distance from text
 \setlength{\headheight}{12pt} % Set header height
 
+\fancypagestyle{plain}{
+    \fancyhf{}
+    \fancyfoot[R]{\thepage}
+    \renewcommand{\headrulewidth}{0pt}
+}
+
 % Roman page numbering for front matter
 \pagenumbering{Roman}
 \setcounter{page}{1}
 
-
+ 
  
 
 
