@@ -70,11 +70,17 @@
 \setlength{\headsep}{20pt} % Adjust header distance from text
 \setlength{\headheight}{12pt} % Set header height
 
+\fancypagestyle{plain}{
+    \fancyhf{}
+    \fancyfoot[R]{\thepage}
+    \renewcommand{\headrulewidth}{0pt}
+}
+
 % Roman page numbering for front matter
 \pagenumbering{Roman}
 \setcounter{page}{1}
 
-
+ 
  
 
 
