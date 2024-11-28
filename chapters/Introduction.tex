@@ -1,0 +1,183 @@
+\chapter{Introduction}
+\vspace{-1.5cm}
+\hspace{-1cm}\rule{19cm}{0.4pt} 
+
+\setstretch{1.5}
+
+\section{Background Information}
+Traditionally, scientific discovery has always been a time-consuming and trial-by-error process that is guided by the systematic steps, which a researcher follows in order to improve knowledge. This pattern usually involves mapping of the unknown, generating hypotheses, conducting experiments, analyzing results, and communication of the findings. As much as this comprehensive process has produced significant advancement across many disciplines, it inherently suffers from human limitations regarding time, creativity, and availability of resources. With the rising need for more effective research methodologies, there is a growing interest in utilizing automation and computational techniques to improve the research process.\\
+The latest developments in computational techniques and machine learning have made it possible to automate the most diverse components of scientific inquiry. The modern automatic systems can assist researchers with literature reviews, data analysis, and designing experiments. Such systems use advanced computational models that can understand and generate natural language, coding, and compiling reports. Such developments have the potential to greatly accelerate the pace of research and make scientific information more available by reducing the costs and efforts required to produce high-quality output. Despite these advances, the full automation of scientific inquiry across its entire life cycle is still a far-from-reachable goal. Current systems are often confined to a specific domain or task and typically require substantial human intervention. For instance, while the automated equipment has the capacity to conduct experiments on its own, it is the human researchers who still control which experiments should be performed.\\
+To address these challenges, there is a critical need for comprehensive frameworks~\cite{2024arXiv240806292L} that can manage the entire research process-including idea generation, experimental execution, and documentation-completely autonomously. In this project, we explore and implement such a framework, testing its effectiveness in multiple research domains and exploring possibilities for improvement. By including various automation technologies in scientific workflows, we will look to optimize processes, increase reproducibility, and encourage collaborative research efforts.\\
+This has significant consequences. As automation systems become more complex, they may enable researchers to focus on higher-level conceptual tasks while delegating routine analyses and experimental procedures to machines. This shift is potentially capable of leading to discoveries at a faster pace and a more inclusive scientific community in which access to high-end research instruments is equitably made.\\
+Advancements in machine learning~\cite{Goodfellow2016DeepLearning}, particularly in the development of large language models (LLMs) and other AI technologies, have opened new avenues for automating various aspects of scientific research. These advancements enable the creation of intelligent systems that can perform complex tasks such as data analysis, hypothesis generation, and even experimental design with minimal human intervention. AI-driven automation can significantly enhance the efficiency and accuracy of research processes by leveraging vast amounts of data and sophisticated algorithms to uncover patterns and insights that might be missed by human researchers.\\
+In the context of this project, AI can be utilized to automate several key components. For instance, machine learning algorithms can be employed to analyze large datasets, identify trends, and generate hypotheses based on the observed data. Natural language processing (NLP) techniques can assist in literature reviews by automatically summarizing relevant research papers and extracting key information. Additionally, AI can be used to design and optimize experiments, ensuring that they are conducted in the most efficient and effective manner possible. By integrating these AI capabilities into the research framework, we aim to create a system that not only accelerates the research process but also improves the quality and reproducibility of scientific findings.
+
+\subsection{Large Language Models}
+Large Language Models (LLMs) are advanced machine learning systems trained to process and generate human-like text based on a given prompt~\cite{2023arXiv231211805G} \&~\cite{2024arXiv240721783G}. They are typically built using transformer architectures, which excel at capturing contextual relationships in sequential data. LLMs are trained on vast amounts of text data to learn statistical patterns, enabling them to perform various tasks such as text generation, translation, summarization, and question-answering. 
+
+The core functionality of an LLM revolves around predicting the probability of the next word or token in a sequence, conditioned on the preceding context. This allows LLMs to generate coherent and contextually relevant outputs. Over time, LLMs like GPT-3, GPT-4,~\cite{openai2023} and others have demonstrated impressive capabilities, including reasoning, coding, and creating content that appears human-authored.
+
+LLMs have been successfully applied in diverse domains, including but not limited to:
+
+\begin{itemize}
+    \item Natural Language Processing (NLP): Text completion, summarization, and sentiment analysis.
+    \item Scientific Research: Generating hypotheses, writing papers, and assisting in literature reviews.
+    \item Code Generation: Helping developers write, debug, and optimize code.
+    \item Content Creation: Crafting articles, reports, and other creative works.
+\end{itemize}
+
+\subsection{LLM Agent Framework}
+Large Language Models (LLMs) are advanced machine learning systems trained to process and generate human-like text based on a given prompt. They are typically built using transformer architectures, which excel at capturing contextual relationships in sequential data. LLMs are trained on vast amounts of text data to learn statistical patterns, enabling them to perform various tasks such as text generation, translation, summarization, and question-answering.
+
+The core functionality of an LLM revolves around predicting the probability of the next word or token in a sequence, conditioned on the preceding context. This allows LLMs to generate coherent and contextually relevant outputs. Over time, LLMs like GPT-3, GPT-4, and others have demonstrated impressive capabilities, including reasoning, coding, and creating content that appears human-authored.
+
+LLMs have been successfully applied in diverse domains, including but not limited to:
+
+\begin{enumerate}
+    \item Natural Language Processing (NLP): Text completion, summarization, and sentiment analysis.
+    \item Scientific Research: Generating hypotheses, writing papers, and assisting in literature reviews.
+    \item Code Generation: Helping developers write, debug, and optimize code.
+    \item Content Creation: Crafting articles, reports, and other creative works.
+\end{enumerate}
+
+\subsection{Aider: An LLM-Bases Coding Assistant}
+Aider is an open-source coding assistant designed to automate and streamline the software development process. It uses the capabilities of LLMs to understand natural language instructions, perform code generation, fix bugs, refactor existing codebases, and even implement new features based on developer input.
+
+Key Features of Aider:
+
+\begin{itemize}
+    \item Code Implementation: Aider can understand the context of existing codebases and add new functionalities based on user prompts.
+    \item Error Handling: It identifies bugs and suggests fixes, enabling developers to debug their code more efficiently.
+    \item Refactoring: Aider can improve code readability, structure, and maintainability through automatic refactoring.
+    \item Advanced Integration: It can seamlessly integrate with various software libraries and tools, making it suitable for complex coding tasks.
+\end{itemize}
+Aider leverages cutting-edge LLM capabilities to achieve high success rates in implementing requested changes. For instance, its reliability has been benchmarked at approximately 18.9\% success on the SWE Bench, a collection of real-world GitHub issues.
+
+
+\section{Project Objectives}  
+The primary objective of this project is to design an autonomous system that can autonomously generate and evaluate new research ideas. By automating the critical components of the scientific method, the project hopes to achieve the following objectives:  
+\begin{enumerate}
+    \item \textbf{Idea Generation:} Formulate a system that generates innovative research ideas that are at the same time novel and feasible in the given domain. This objective aims to harness computational creativity to inspire novel directions of research.
+
+    \item \textbf{Experimental Design and Experimentation:} Establish an automated framework for formulating experimental setups, running simulations or experiments, and collecting results. This will also strengthen the experimental phase to better test the formulated hypotheses.
+
+    \item \textbf{Result Analysis and Logging:} Systematically evaluate experimental findings and present findings in a logical and academically oriented manner that is compliant with academic standards. This goal focuses on ensuring that findings are interpreted accurately and communicated effectively.
+
+    \item \textbf{Peer-Review Simulation:} Use a review system to evaluate the quality of the research produced, being unbiased and relevant. This simulation will help maintain high levels of research outputs and provide feedback for improvement.
+
+    \item \textbf{Cost-Effectiveness:} It is therefore important to ensure that the system operates within acceptable computational and financial parameters, which makes it accessible to a wider audience. This goal emphasizes the importance of cost-effectiveness in enabling wide acceptance of the system.
+\end{enumerate}
+
+\section{Significance of the Project}
+The significance of this project lies in its potential to transform how research is conducted and disseminated. Traditional research workflows often require substantial time, expertise, and resources, which can limit participation to well-funded institutions or individuals with specialized skills. This project addresses these challenges by focusing on several key areas:
+\begin{enumerate}
+    \item \textbf{Enhancing Accessibility:} By automating the research process, the project aims to reduce barriers for individuals or organizations with limited resources. This enhancement of accessibility will enable broader participation in scientific inquiry, allowing more diverse voices and perspectives to contribute to research efforts.
+
+    \item \textbf{Accelerating Discovery:} The implementation of streamlined workflows and the elimination of bottlenecks are central to this project. By doing so, the system will facilitate faster hypothesis testing and knowledge generation, significantly increasing the pace at which new discoveries can be made.
+
+    \item \textbf{Improving Reproducibility:} Automated systems can standardize experimental procedures and documentation, thereby reducing human errors and improving the reproducibility of research findings. This improvement is crucial for maintaining the integrity of scientific research and ensuring that results can be reliably replicated by other researchers.
+
+    \item \textbf{Democratizing Innovation:} By reducing the cost of conducting and publishing research, this project empowers smaller teams and underrepresented regions to contribute to global scientific advancements. This democratization of innovation fosters a more inclusive scientific community where diverse ideas can flourish.
+
+    \item \textbf{Driving Interdisciplinary Research:} Automation has the potential to encourage cross-domain exploration by minimizing the need for domain-specific expertise during the initial stages of hypothesis generation and experimentation. This capability can lead to novel interdisciplinary collaborations that might not have been possible within traditional research frameworks.
+\end{enumerate}
+
+
+
+\section{Scope and Limitations}
+\subsection{Scope } 
+It is this initiative which aims to automate the basic parts of the research process especially with regard to idea generation experimentation, and result-documentation. While it's basically tested within a domain, namely computational science or machine learning, the base framework is quite easily modified for application to other disciplines with suitable adaptation. 
+The initiative further incorporates several tools and methodologies dedicated to the assessment of novelty, ensuring that the ideas produced do not simply replicate existing works. Through the implementation of automated review processes, the initiative aspires to emulate peer-review criteria while offering a thorough evaluation of the quality of research. This comprehensive strategy intends to improve both the integrity and significance of the research outputs produced by the system.
+
+\subsection{Limitations }
+Although the scope of this project is vast, it has to be well noted that some intrinsic boundaries exist:
+\begin{enumerate}
+    \item \textbf{Domain-specific limitations:} The system is likely to face challenges in specific domains that require exclusive information or proprietary datasets. It may not be so effective in certain research domains in which a subtle understanding is required.
+    
+    \item \textbf{Dependency on Computation Resources:} Availability and cost for computation resources determine the running cost of the system directly. Change in resource availability will have impact on the use of functionality by different types of users or organizations.
+    
+    \item \textbf{Implementation Challenges:} There is a possibility that bugs in the implementation have generated misleading results or part analyses due to the limitations. Accuracy and reliability are major challenges, and the algorithms at present need to be continuously refined.
+    
+    \item \textbf{Ethical Concerns:} There may be an opportunity for its abuse, such as preparing pseudo-scientific reports or unethical research submissions. These issues highlight the necessity of constant supervision and regulation in minimizing the risks involved with the automated production of research.
+    
+    \item \textbf{Human Oversight Required:} It does produce results and reports with results, but the wider implication often requires human insight, which limits the complete automation of the system and therefore underlines the importance of cooperation between automated tools and human researchers.
+    
+    \item \textbf{Current Failure Modes}  The framework, in its current form, has several shortcomings in addition to those already identified. These include, but are not limited to:
+    \begin{itemize}
+        \item 
+        The idea generation process often results in very similar ideas across different runs and models. This issue may be addressed by allowing the system to follow up and delve deeper into its best ideas or by providing it with content from recently published projects as a source of novelty.
+        \item 
+        There is a failure to implement a significant fraction of the proposed ideas. Additionally, there are frequent issues with generating LaTeX that compiles correctly. While the system can produce creative and promising ideas, many are too challenging for it to implement effectively.
+        \item 
+        The framework may incorrectly implement an idea, which can be difficult to catch. An adversarial code-checking reviewer may partially address this issue; however, manual verification of implementations is essential before trusting reported results.
+        \item 
+
+        Due to the limited number of experiments conducted per idea, the results often do not meet the expected rigor and depth of a standard machine learning conference project. Moreover, the constraints on the number of experiments hinder fair comparisons that control for parameters, FLOPs, or runtime, leading to potentially deceptive or inaccurate conclusions. These issues are expected to improve as the costs of compute and foundation models decrease.
+        \item 
+
+        Currently, without utilizing vision capabilities, the system cannot correct visual issues in its outputs or interpret plots. For instance, generated plots may be unreadable, tables may exceed page width, and overall layout quality is often suboptimal. Future versions with integrated vision capabilities should address these concerns.
+        \item 
+
+        When writing, the framework sometimes struggles to find and cite the most relevant projects. It also frequently fails to reference figures correctly in LaTeX and may hallucinate invalid file paths.
+        \item 
+
+        Importantly, critical errors can occur when writing and evaluating results. For example, it struggles with comparing magnitudes of numbers—a known issue with LLMs. Additionally, when changing metrics (e.g., loss functions), it sometimes fails to consider this when comparing to baselines. To mitigate this risk, we ensure that all experimental results are reproducible by storing copies of all executed files.
+        \item 
+
+        Rarely, the system can hallucinate entire results. For example, earlier prompts instructed it to include confidence intervals and ablation studies; however, due to computational constraints, it did not always collect additional results and occasionally fabricated entire ablation tables. This was resolved by explicitly instructing the system to include only results it directly observed. Furthermore, it often hallucinates facts not provided by users, such as hardware specifications.
+        \item 
+        
+        More generally, we do not recommend taking the scientific content generated by this version at face value. Instead, we advise treating outputs as hints of promising ideas for further exploration by practitioners. Nonetheless, we expect the trustworthiness of the framework to increase significantly in tandem with improvements in foundation models. This document is shared primarily to illustrate current capabilities and suggest what may soon be possible. 
+    \end{itemize}
+\end{enumerate}
+
+\section{Overview of the Structure}
+This report is organized into six chapters, each building upon the previous to provide a comprehensive understanding of the project and its outcomes. The structure ensures clarity and logical progression, covering all essential aspects from conceptualization to execution and reflections.
+
+\begin{itemize}
+    \item \textbf{Chapter 1: Introduction}\\
+    The introduction provides the foundation for the project, outlining its motivation, objectives, and significance. This chapter contextualizes the problem addressed by the project and highlights the potential impact of its successful implementation. It also defines the scope of the work, setting the stage for the subsequent chapters.
+
+    \item \textbf{Chapter 2: Methodology}\\
+    This chapter details the systematic approach adopted for the project. It describes:
+    \begin{itemize}
+        \item Project Overview: An outline of the project and its conceptual framework
+        \item Design and Strategy: The strategies used to achieve the objectives
+        \item Data Collection Methods: The methods employed for data collection and analytical techniques
+        \item Ethical Considerations: Ethical considerations and limitations encountered during the process
+    \end{itemize}
+    The methodology lays out a plan of action, ensuring a structured and replicable approach to solving the identified problem.
+
+    \item \textbf{Chapter 3: Implementation}\\
+    This chapter delves into the technical execution of the project. It covers:
+    \begin{itemize}
+        \item Development Environment: An overview of the tools and technologies used
+        \item Execution Process: A step-by-step process of executing project tasks
+        \item Timeline and Resource Allocation: A timeline of project phases
+        \item Challenges and Strategies: Challenges faced during implementation
+        \item Success Factors: Key factors that contributed to achieving the objectives
+    \end{itemize}
+
+    \item \textbf{Chapter 4: Results and Discussion}\\
+    This chapter presents the outcomes of the project, including:
+    \begin{itemize}
+        \item Key Findings: Important findings derived from experiments
+        \item Visual Representations: Graphs, tables, and charts to support analysis
+        \item Insights Gained: Insights from results and comparisons
+        \item Challenges Observed: Challenges and anomalies during experimentation
+    \end{itemize}
+
+    \item \textbf{Chapter 5: Conclusions and Discussion}\\
+    This chapter provides a summary of the entire project, discussing:
+    \begin{itemize}
+        \item Implications of Findings: The implications for the field
+        \item Recommendations for Further Research: Suggestions for future work
+        \item Limitations Encountered: Limitations faced during the project
+    \end{itemize}
+\end{itemize}
+
+\begin{justify}
+    
+    This structured outline serves as a roadmap for presenting the project's journey from inception to completion while highlighting key insights gained along the way.
+\end{justify}
+
