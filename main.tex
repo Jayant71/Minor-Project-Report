@@ -1,13 +1,19 @@
 \documentclass[a4paper,12pt]{report}
 
 \usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows}
+\usetikzlibrary{patterns, shapes.callouts} 
+
+\usepackage{listings}
+\usepackage{color}
+
 \usepackage{background}
 \usepackage{geometry}
 \usepackage{fancyhdr}
 \usepackage{mathptmx}
 \usepackage{biblatex}
 \addbibresource{references.bib}
-\usepackage[T1]{fontenc}
+\usepackage[T1]{fontenc} 
 \usepackage{ragged2e}
 \usepackage{enumitem}
 \usepackage{titlesec}
@@ -18,8 +24,19 @@
 \usepackage{array}
 \usepackage{tcolorbox}
 \usepackage{tocloft}
-\usepackage{longtable}
+\usepackage{longtable} 
+\usepackage{times}
 
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+
+\lstset{
+  basicstyle=\ttfamily,
+  columns=fullflexible,
+  frame=single,
+  breaklines=true,
+  postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+  commentstyle=\color{mygray},
+}
 
 \titleformat{\chapter}[display]
   {\normalfont\huge\bfseries}
@@ -31,19 +48,20 @@
 \titlespacing*{\section}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
 \titlespacing*{\subsection}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
 
+% Define styles for black-and-white diagram
+\tikzstyle{process} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=white]
+\tikzstyle{data} = [cylinder, shape border rotate=90, minimum height=1.5cm, text centered, draw=black, fill=white]
+\tikzstyle{entity} = [rectangle, minimum width=2.5cm, minimum height=1cm, text centered, draw=black, fill=white]
+\tikzstyle{arrow} = [thick,->,>=stealth]
 
-
-
-% Define the geometry of the page
 \geometry{
-  a4paper,
+  a4paper, 
   left=20mm,
   right=20mm,
   top=17mm,
   bottom=20mm
 }
 
-% Define the border using TikZ
 \backgroundsetup{
   scale=1,
   color=black,
@@ -124,6 +142,7 @@
 \setcounter{page}{1} 
 \pagenumbering{arabic}
 \include{chapters/Introduction.tex}
+ 
 
 \newpage
 \include{chapters/Methodology.tex}
@@ -140,5 +159,6 @@
 
 \newpage
 \printbibliography[title=References]
+\addcontentsline{toc}{section}{\textbf{References}}
 
 \end{document}

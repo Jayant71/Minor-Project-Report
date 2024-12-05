@@ -2,8 +2,9 @@
 \vspace{-1.5cm}
 \hspace{-1cm}\rule{19cm}{0.4pt} 
 
-\setstretch{1.2}
+\setstretch{1.5}
 \normalsize
+
 
 \section{Background Information}
 Traditionally, scientific discovery has always been a time-consuming and trial-by-error process that is guided by the systematic steps, which a researcher follows in order to improve knowledge. This pattern usually involves mapping of the unknown, generating hypotheses, conducting experiments, analyzing results, and communication of the findings. As much as this comprehensive process has produced significant advancement across many disciplines, it inherently suffers from human limitations regarding time, creativity, and availability of resources. With the rising need for more effective research methodologies, there is a growing interest in utilizing automation and computational techniques to improve the research process.\\
@@ -14,8 +15,7 @@ Advancements in machine learning~\cite{Goodfellow2016DeepLearning}, particularly
 In the context of this project, AI can be utilized to automate several key components. For instance, machine learning algorithms can be employed to analyze large datasets, identify trends, and generate hypotheses based on the observed data. Natural language processing (NLP) techniques can assist in literature reviews by automatically summarizing relevant research papers and extracting key information. Additionally, AI can be used to design and optimize experiments, ensuring that they are conducted in the most efficient and effective manner possible. By integrating these AI capabilities into the research framework, we aim to create a system that not only accelerates the research process but also improves the quality and reproducibility of scientific findings.
 
 \subsection{Large Language Models}
-Large Language Models (LLMs) are advanced machine learning systems trained to process and generate human-like text based on a given prompt~\cite{2023arXiv231211805G} \&~\cite{2024arXiv240721783G}. They are typically built using transformer architectures, which excel at capturing contextual relationships in sequential data. LLMs are trained on vast amounts of text data to learn statistical patterns, enabling them to perform various tasks such as text generation, translation, summarization, and question-answering. 
-
+Large Language Models (LLMs) are advanced machine learning systems trained to process and generate human-like text based on a given prompt~\cite{2023arXiv231211805G} \&~\cite{2024arXiv240721783G}. They are typically built using transformer architectures, which excel at capturing contextual relationships in sequential data. LLMs are trained on vast amounts of text data to learn statistical patterns, enabling them to perform various tasks such as text generation, translation, summarization, and question-answering. \\
 The core functionality of an LLM revolves around predicting the probability of the next word or token in a sequence, conditioned on the preceding context. This allows LLMs to generate coherent and contextually relevant outputs. Over time, LLMs like GPT-3, GPT-4,~\cite{openai2023} and others have demonstrated impressive capabilities, including reasoning, coding, and creating content that appears human-authored.
 
 LLMs have been successfully applied in diverse domains, including but not limited to:
@@ -28,8 +28,7 @@ LLMs have been successfully applied in diverse domains, including but not limite
 \end{itemize}
 
 \subsection{LLM Agent Framework}
-Large Language Models (LLMs) are advanced machine learning systems trained to process and generate human-like text based on a given prompt. They are typically built using transformer architectures, which excel at capturing contextual relationships in sequential data. LLMs are trained on vast amounts of text data to learn statistical patterns, enabling them to perform various tasks such as text generation, translation, summarization, and question-answering.
-
+Large Language Models (LLMs) are advanced machine learning systems trained to process and generate human-like text based on a given prompt. They are typically built using transformer architectures, which excel at capturing contextual relationships in sequential data. LLMs are trained on vast amounts of text data to learn statistical patterns, enabling them to perform various tasks such as text generation, translation, summarization, and question-answering.\\
 The core functionality of an LLM revolves around predicting the probability of the next word or token in a sequence, conditioned on the preceding context. This allows LLMs to generate coherent and contextually relevant outputs. Over time, LLMs like GPT-3, GPT-4, and others have demonstrated impressive capabilities, including reasoning, coding, and creating content that appears human-authored.
 
 LLMs have been successfully applied in diverse domains, including but not limited to:
@@ -54,35 +53,81 @@ Key Features of Aider:
 \end{itemize}
 Aider leverages cutting-edge LLM capabilities to achieve high success rates in implementing requested changes. For instance, its reliability has been benchmarked at approximately 18.9\% success on the SWE Bench, a collection of real-world GitHub issues.
 
+\section{Aims and Objectives}
+The main objective of this system is to create a completely autonomous form that can transform the existing research process by automating the critical components of scientific research. The system, with an integration of advanced computational techniques and machine learning, along with automated tools, aims to enhance the efficiency, reproducibility, and accessibility of scientific research. The overall objective remains to streamline the research process while allowing for faster discoveries and fostering collaboration, thereby democratizing access to high-quality research tools and methodologies.
 
-\section{Project Objectives}  
-The primary objective of this project is to design an autonomous system that can autonomously generate and evaluate new research ideas. By automating the critical components of the scientific method, the project hopes to achieve the following objectives:  
-\begin{enumerate}
-    \item \textbf{Idea Generation:} Formulate a system that generates innovative research ideas that are at the same time novel and feasible in the given domain. This objective aims to harness computational creativity to inspire novel directions of research.
+To achieve this aim, the project is guided by the following objectives:
 
-    \item \textbf{Experimental Design and Experimentation:} Establish an automated framework for formulating experimental setups, running simulations or experiments, and collecting results. This will also strengthen the experimental phase to better test the formulated hypotheses.
+\begin{itemize}
+    \item \textbf{Idea Generation:} The system will leverage computational creativity and advanced algorithms to autonomously generate innovative research ideas. These ideas will be novel, feasible, and aligned with the specific needs and challenges of a given domain. The objective is to inspire groundbreaking research directions by harnessing the power of automation to explore a vast landscape of possibilities beyond human capabilities.
 
-    \item \textbf{Result Analysis and Logging:} Systematically evaluate experimental findings and present findings in a logical and academically oriented manner that is compliant with academic standards. This goal focuses on ensuring that findings are interpreted accurately and communicated effectively.
+    \item \textbf{Experimental Design and Execution:} A sound framework will be built for designing and executing experiments or simulations without human intervention. This framework will include choosing the experimental parameters, setting up experimental setups, and result collection. It will optimize experimental workflows in order to minimize human intervention and increase efficiency, accuracy, and scalability of research.
 
-    \item \textbf{Peer-Review Simulation:} Use a review system to evaluate the quality of the research produced, being unbiased and relevant. This simulation will help maintain high levels of research outputs and provide feedback for improvement.
+    \item \textbf{Result Analysis and Logging:} The system will systematically analyze experimental outcomes based on advanced data analysis techniques. All findings will be logged, interpreted, and presented in a logical, structured, and academically compliant format so that results are not only accurate and meaningful but also effectively communicated in a way that reflects the highest scientific standards.
 
-    \item \textbf{Cost-Effectiveness:} It is therefore important to ensure that the system operates within acceptable computational and financial parameters, which makes it accessible to a wider audience. This goal emphasizes the importance of cost-effectiveness in enabling wide acceptance of the system.
-\end{enumerate}
+    \item \textbf{Peer Review Simulation:} To ensure the quality and credibility of the research produced, the system will have a simulation of the peer-review process. This feature will check the relevance, originality, and rigour of the research outcomes. It will provide constructive feedback for maintaining high standards and helping in iterative improvement.
+
+    \item \textbf{Cost-Effectiveness:} The project recognizes the importance of accessibility and emphasizes that the system should operate within reasonable computational and financial parameters. This objective ensures that the system remains accessible to researchers and organizations with limited resources, thereby allowing broader participation and fostering inclusivity in scientific discovery.
+\end{itemize}
+
+\begin{figure}[htbp]
+    \centering
+
+    
+    \begin{tikzpicture}[node distance=1.5cm, every node/.style={align=center}]
+        % Define styles
+        \tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, very thick]
+        \tikzstyle{decision} = [diamond, minimum width=3cm, minimum height=1cm, text centered, draw=black, very thick]
+        \tikzstyle{bottleneck} = [cloud callout, cloud puffs=12, cloud puff arc=120, aspect=3, inner ysep=1em, minimum width=1cm, minimum height=1cm, text centered, draw=black, ]
+        % Nodes
+        \node (start) [startstop] {Start Proposal};
+        \node (literature) [process, below of=start] {Conduct Literature Review};
+        \node (ideaValidation) [process, right of=literature, xshift=4cm] {Validate Idea Novelty};
+        \node (plan) [process, below of=literature, yshift=-5cm] {Draft Research Plan};
+        \node (ethics) [process, left of=plan, xshift=-4cm] {Address Ethics \\and Compliance};
+        \node (feedback) [process, below of=plan, yshift=-4.5cm] {Gather Feedback};
+        \node (submission) [process, left of=feedback, xshift=-4cm] {Submit Proposal};
+        \node (review) [process, below of=submission , yshift=-2cm ] {Await Peer Review}; 
+        \node (decision) [decision, right of=review, xshift=4cm] {Accepted?};
+        \node (end) [startstop, below of=decision, yshift=-2cm] {End Process};
+        
+        % Bottleneck markers
+        \node (b1) [bottleneck, left of=literature, xshift=-3cm, yshift=-3cm] {B1: \\ Time-Consuming};
+        \node (b2) [bottleneck, below of=ideaValidation, xshift=-1cm, yshift=-1.5cm] {B2: \\ Manual Novelty Check};
+        \node (b3) [bottleneck, below of=ethics, yshift=-1.5cm] {B3: \\ Compliance Delays};
+        \node (b4) [bottleneck, right of=feedback, xshift=3.25cm, yshift=2cm] {B4: \\ Limited Iteration};
+        \node (b5) [bottleneck, below of=review, yshift=-1cm] {B5: \\ Long Peer Review};
+        
+        % Arrows
+        \draw [arrow] (start) -- (literature);
+        \draw [arrow] (literature) -- (ideaValidation);
+        \draw [arrow] (literature) -- (plan);
+        \draw [arrow] (plan) -- (ethics);
+        \draw [arrow] (plan) -- (feedback);
+        \draw [arrow] (feedback) -- (submission);
+        \draw [arrow] (submission) -- (review);
+        \draw [arrow] (review) -- (decision); 
+        \draw [arrow] (decision) -- node[midway, above] {No} ++(3,0) |- (plan);
+        \draw [arrow] (decision) -- node[midway, right] {Yes} (end); 
+        
+        % Bottleneck Arrows
+        \draw [dashed, arrow, red] (b1) -- (literature);
+        \draw [dashed, arrow, red] (b2) -- (ideaValidation);
+        \draw [dashed, arrow, red] (b3) -- (ethics);
+        \draw [dashed, arrow, red] (b4) -- (feedback);
+        \draw [dashed, arrow, red] (b5) -- (review);
+    \end{tikzpicture}
+    \caption{Process Flow Diagram Highlighting Bottlenecks in Traditional Research Proposal Methods}
+    \label{fig:bottlenecks} % chktex 24
+\end{figure}
+
+
 
 \section{Significance of the Project}
 The significance of this project lies in its potential to transform how research is conducted and disseminated. Traditional research workflows often require substantial time, expertise, and resources, which can limit participation to well-funded institutions or individuals with specialized skills. This project addresses these challenges by focusing on several key areas:
-\begin{enumerate}
-    \item \textbf{Enhancing Accessibility:} By automating the research process, the project aims to reduce barriers for individuals or organizations with limited resources. This enhancement of accessibility will enable broader participation in scientific inquiry, allowing more diverse voices and perspectives to contribute to research efforts.
-
-    \item \textbf{Accelerating Discovery:} The implementation of streamlined workflows and the elimination of bottlenecks are central to this project. By doing so, the system will facilitate faster hypothesis testing and knowledge generation, significantly increasing the pace at which new discoveries can be made.
-
-    \item \textbf{Improving Reproducibility:} Automated systems can standardize experimental procedures and documentation, thereby reducing human errors and improving the reproducibility of research findings. This improvement is crucial for maintaining the integrity of scientific research and ensuring that results can be reliably replicated by other researchers.
-
-    \item \textbf{Democratizing Innovation:} By reducing the cost of conducting and publishing research, this project empowers smaller teams and underrepresented regions to contribute to global scientific advancements. This democratization of innovation fosters a more inclusive scientific community where diverse ideas can flourish.
-
-    \item \textbf{Driving Interdisciplinary Research:} Automation has the potential to encourage cross-domain exploration by minimizing the need for domain-specific expertise during the initial stages of hypothesis generation and experimentation. This capability can lead to novel interdisciplinary collaborations that might not have been possible within traditional research frameworks.
-\end{enumerate}
-
+The significance of this project lies in its potential to transform how research is conducted and disseminated. Traditional research workflows often require substantial time, expertise, and resources, which can limit participation to well-funded institutions or individuals with specialized skills. This project addresses these challenges by focusing on several key areas.\\
+Firstly, by automating the research process, the project aims to reduce barriers for individuals or organizations with limited resources. This enhancement of accessibility will enable broader participation in scientific inquiry, allowing more diverse voices and perspectives to contribute to research efforts. Secondly, the implementation of streamlined workflows and the elimination of bottlenecks are central to this project. By doing so, the system will facilitate faster hypothesis testing and knowledge generation, significantly increasing the pace at which new discoveries can be made. Thirdly, automated systems can standardize experimental procedures and documentation, thereby reducing human errors and improving the reproducibility of research findings. This improvement is crucial for maintaining the integrity of scientific research and ensuring that results can be reliably replicated by other researchers.\\
+Additionally, by reducing the cost of conducting and publishing research, this project empowers smaller teams and underrepresented regions to contribute to global scientific advancements. This democratization of innovation fosters a more inclusive scientific community where diverse ideas can flourish. Finally, automation has the potential to encourage cross-domain exploration by minimizing the need for domain-specific expertise during the initial stages of hypothesis generation and experimentation. This capability can lead to novel interdisciplinary collaborations that might not have been possible within traditional research frameworks.
 
 
 \section{Scope and Limitations}
@@ -132,6 +177,33 @@ Although the scope of this project is vast, it has to be well noted that some in
     \end{itemize}
 \end{enumerate}
 
+\section{Software Engineering Paradigms}
+
+Our project, which aims to revolutionize traditional research workflows through automation and enhanced accessibility, various software engineering paradigms play a critical role. Each paradigm contributes uniquely to the development, implementation, and sustainability of the automated research tools we intend to create. By leveraging these paradigms, we can ensure that our solutions are robust, scalable, and user-friendly.
+
+\subsection{Procedural Programming Paradigm}
+The \textbf{procedural programming paradigm} serves as a foundational approach for implementing core functionalities in the automated research tools. This paradigm emphasizes structured programming, which is essential for our project implementation. Through modular development, we break down tasks such as data collection, processing, and analysis into distinct procedures, allowing for easier debugging and maintenance. Code reusability is enhanced as functions can be reused across different modules of the project, improving efficiency and reducing development time. The paradigm's emphasis on simplicity ensures clear and straightforward code structures that facilitate understanding among team members, especially those new to the project. By using procedural languages like Python, we can leverage libraries that support scientific computing, enabling efficient program design and execution.
+
+\subsection{Object-Oriented Programming (OOP) Paradigm}
+
+The \textbf{object-oriented programming paradigm} is integral to managing the complexity of automated research tools. Encapsulation allows bundling data (e.g., experimental results) and methods (e.g., analysis algorithms) within objects, promoting data integrity and modularity. Through inheritance, we can create a class hierarchy that defines general behaviors in base classes that can be extended for specific types of experiments or analyses, facilitating code reuse. Polymorphism enables us to define generic methods that can operate on objects of different classes, allowing for flexible integration of new features as the project evolves. Languages such as Python may be employed to implement these principles effectively, providing a robust framework for building complex systems.
+
+\subsection{Functional Programming Paradigm}
+
+The \textbf{functional programming paradigm} enhances our ability to handle data processing tasks efficiently. First-class functions can be passed as arguments or returned from other functions, facilitating higher-order functions that simplify complex data transformations. The use of immutable data structures ensures that data integrity is maintained throughout various stages of research, reducing errors associated with mutable states. The declarative code approach allows researchers to express their intent without delving into implementation details, making the code more intuitive. By incorporating functional programming languages like Haskell or Scala for specific components, we can take advantage of their strengths in handling large datasets and promoting concise code.
+
+\subsection{Agile Software Development Paradigm}
+
+The adoption of the \textbf{Agile software development paradigm} is vital for ensuring responsiveness to user needs throughout the project lifecycle. Through iterative development, we break down the project into sprints, allowing for continuous feedback from users—researchers who will utilize these tools—to refine features and improve usability. Customer collaboration ensures that stakeholders are engaged throughout the development process, ensuring that the tools meet their needs effectively and fostering a sense of ownership and increasing adoption rates. Regular retrospectives enable our team to reflect on processes and outcomes, facilitating ongoing enhancements in both product quality and team dynamics. This Agile approach ensures that we remain adaptable to changing requirements while delivering value consistently.
+
+\subsection{DevOps Paradigm}
+
+The integration of the \textbf{DevOps paradigm} is crucial for ensuring smooth collaboration between development and operations teams. Continuous Integration/Continuous Deployment (CI/CD) automates testing and deployment processes, ensuring that updates to our research tools are delivered quickly and reliably, minimizing downtime for users. Infrastructure as Code (IaC) allows us to manage cloud resources programmatically, enabling efficient scaling according to user demand without manual intervention. Implementation of monitoring solutions provides insights into tool performance in real-time, enabling proactive adjustments based on user interactions. By adopting DevOps practices, we enhance collaboration across teams while ensuring high-quality software delivery.
+
+\subsection{Software as a Service (SaaS) Paradigm}
+
+The emergence of the \textbf{Software as a Service (SaaS) paradigm} aligns perfectly with our project's goals of accessibility and democratization. Remote access enables users to access our automated research tools via any internet-connected device without needing local installations, thereby broadening participation from diverse geographical regions. Our SaaS model provides scalability that allows us to dynamically adjust resources based on user demand, ensuring optimal performance during peak usage times without significant upfront costs. A subscription-based pricing model lowers financial barriers for smaller institutions or individual researchers, promoting inclusivity in scientific research. This SaaS approach enables us to provide powerful research tools while fostering innovation across various sectors.
+
 \section{Overview of the Structure}
 This report is organized into six chapters, each building upon the previous to provide a comprehensive understanding of the project and its outcomes. The structure ensures clarity and logical progression, covering all essential aspects from conceptualization to execution and reflections.
 
@@ -176,8 +248,3 @@ This report is organized into six chapters, each building upon the previous to p
         \item Limitations Encountered: Limitations faced during the project
     \end{itemize}
 \end{itemize}
-
-
-    
-    This structured outline serves as a roadmap for presenting the project's journey from inception to completion while highlighting key insights gained along the way.
-
