@@ -1,0 +1,10 @@
+% DO NOT USE \newpage here
+\input{modules/header.tex}  % This should only define a header (e.g., title/logo) but not force a page break
+
+\vspace{-2cm}  % Adjust spacing if needed
+
+\renewcommand{\contentsname}{\begin{center}\textbf{\Large TABLE OF CONTENTS\\[-1cm]}\end{center}}
+
+\addcontentsline{toc}{section}{\textbf{Table of Contents}}
+
+{\normalsize \tableofcontents}

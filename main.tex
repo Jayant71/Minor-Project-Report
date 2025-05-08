@@ -115,34 +115,21 @@
 \include{declarations/acknowledgement.tex}
 
 
+\include{otherpages/tableofcontents}
 
-\input{modules/header.tex}
-\vspace{-2cm}
-
-\renewcommand{\contentsname}{\begin{center}\textbf{\Large TABLE OF CONTENTS\\ \vspace{-1cm}}\end{center} } % Center the title
-
-\addcontentsline{toc}{section}{\textbf{Table of Contents}}
-{\normalsize \tableofcontents}
-  
-  
 \include{otherpages/abbreviation.tex}
 
 
-
-\input{modules/header.tex}
-\vspace{-2cm}
-\renewcommand{\listfigurename}{\begin{center}\textbf{\Large LIST OF FIGURES \\ \vspace{-1cm}}\end{center} } % Center the title
-{\normalsize \listoffigures}
-\addcontentsline{toc}{section}{\textbf{List of Figures}}
+\include{otherpages/listoffigures.tex}
 
 \include{otherpages/abstract.tex}
 
 
 \newpage
-\setcounter{page}{1} 
+\setcounter{page}{1}
 \pagenumbering{arabic}
 \include{chapters/Introduction.tex}
- 
+
 
 \newpage
 \include{chapters/Methodology.tex}
@@ -152,7 +139,7 @@
 
 \newpage
 \include{chapters/Results_Discussion.tex}
- 
+
 \newpage
 \include{chapters/Conclusion.tex}
 
