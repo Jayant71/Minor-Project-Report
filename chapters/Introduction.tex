@@ -5,246 +5,143 @@
 \setstretch{1.5}
 \normalsize
 
-
 \section{Background Information}
-Traditionally, scientific discovery has always been a time-consuming and trial-by-error process that is guided by the systematic steps, which a researcher follows in order to improve knowledge. This pattern usually involves mapping of the unknown, generating hypotheses, conducting experiments, analyzing results, and communication of the findings. As much as this comprehensive process has produced significant advancement across many disciplines, it inherently suffers from human limitations regarding time, creativity, and availability of resources. With the rising need for more effective research methodologies, there is a growing interest in utilizing automation and computational techniques to improve the research process.\\
-The latest developments in computational techniques and machine learning have made it possible to automate the most diverse components of scientific inquiry. The modern automatic systems can assist researchers with literature reviews, data analysis, and designing experiments. Such systems use advanced computational models that can understand and generate natural language, coding, and compiling reports. Such developments have the potential to greatly accelerate the pace of research and make scientific information more available by reducing the costs and efforts required to produce high-quality output. Despite these advances, the full automation of scientific inquiry across its entire life cycle is still a far-from-reachable goal. Current systems are often confined to a specific domain or task and typically require substantial human intervention. For instance, while the automated equipment has the capacity to conduct experiments on its own, it is the human researchers who still control which experiments should be performed.\\
-To address these challenges, there is a critical need for comprehensive frameworks~\cite{2024arXiv240806292L} that can manage the entire research process-including idea generation, experimental execution, and documentation-completely autonomously. In this project, we explore and implement such a framework, testing its effectiveness in multiple research domains and exploring possibilities for improvement. By including various automation technologies in scientific workflows, we will look to optimize processes, increase reproducibility, and encourage collaborative research efforts.\\
-This has significant consequences. As automation systems become more complex, they may enable researchers to focus on higher-level conceptual tasks while delegating routine analyses and experimental procedures to machines. This shift is potentially capable of leading to discoveries at a faster pace and a more inclusive scientific community in which access to high-end research instruments is equitably made.\\
-Advancements in machine learning~\cite{Goodfellow2016DeepLearning}, particularly in the development of large language models (LLMs) and other AI technologies, have opened new avenues for automating various aspects of scientific research. These advancements enable the creation of intelligent systems that can perform complex tasks such as data analysis, hypothesis generation, and even experimental design with minimal human intervention. AI-driven automation can significantly enhance the efficiency and accuracy of research processes by leveraging vast amounts of data and sophisticated algorithms to uncover patterns and insights that might be missed by human researchers.\\
-In the context of this project, AI can be utilized to automate several key components. For instance, machine learning algorithms can be employed to analyze large datasets, identify trends, and generate hypotheses based on the observed data. Natural language processing (NLP) techniques can assist in literature reviews by automatically summarizing relevant research papers and extracting key information. Additionally, AI can be used to design and optimize experiments, ensuring that they are conducted in the most efficient and effective manner possible. By integrating these AI capabilities into the research framework, we aim to create a system that not only accelerates the research process but also improves the quality and reproducibility of scientific findings.
+Reading proficiency stands as a cornerstone of academic achievement, continuous professional growth, and individual enlightenment. The capacity to effectively engage with written text underpins learning across all disciplines and is integral to navigating the complexities of modern life. However, the act of sustained reading demands a significant cognitive resource: focused attention. In an increasingly digital world, characterized by a deluge of information and pervasive stimuli, maintaining unwavering concentration during reading tasks presents a substantial challenge for many individuals \cite{article}. When a reader's attention deviates, the cognitive processes responsible for comprehension, critical analysis, and memory encoding are disrupted. This can lead to reduced reading speed, superficial understanding of the material, and ultimately, a diminished return on the time invested in reading. The challenge is not merely one of willpower but is often exacerbated by environmental factors and the inherent cognitive load associated with processing complex textual information \cite{Ghosh_CognitiveLoadReading_2022}.
 
-\subsection{Large Language Models}
-Large Language Models (LLMs) are advanced machine learning systems trained to process and generate human-like text based on a given prompt~\cite{2023arXiv231211805G} \&~\cite{2024arXiv240721783G}. They are typically built using transformer architectures, which excel at capturing contextual relationships in sequential data. LLMs are trained on vast amounts of text data to learn statistical patterns, enabling them to perform various tasks such as text generation, translation, summarization, and question-answering. \\
-The core functionality of an LLM revolves around predicting the probability of the next word or token in a sequence, conditioned on the preceding context. This allows LLMs to generate coherent and contextually relevant outputs. Over time, LLMs like GPT-3, GPT-4,~\cite{openai2023} and others have demonstrated impressive capabilities, including reasoning, coding, and creating content that appears human-authored.
+Historically, strategies to enhance reading focus have centered on behavioral modifications, such as cultivating disciplined study habits, optimizing the reading environment to minimize external distractions, and employing time management techniques like the Pomodoro method. While these approaches offer value, their efficacy can vary greatly among individuals and may prove insufficient in scenarios demanding prolonged, deep engagement with challenging texts. Recognizing these limitations, there is a burgeoning interest in exploring how technological advancements can offer more direct, personalized, and real-time support for attention management during reading.
 
-LLMs have been successfully applied in diverse domains, including but not limited to:
+The confluence of Artificial Intelligence (AI), particularly its sub-fields of computer vision and machine learning, has paved the way for innovative solutions to monitor and support cognitive states, including attention \cite{Sharma_AttentionClassroom_2023}. Computer vision endows systems with the ability to perceive and interpret visual information from an environment, akin to human sight. By leveraging standard cameras (like webcams) and sophisticated algorithms, it is now feasible to non-intrusively track various visual cues indicative of a user's engagement level. Among these, eye gaze tracking has emerged as a powerful tool, providing insights into the locus of a user's visual attention, which is often closely coupled with their cognitive focus \cite{Cheng_GazeSurvey_2021, Kothari_GazeReviewDL_2024}. Techniques such as those proposed by Abdelrahman et al. in L2CS-Net demonstrate the capability for fine-grained gaze estimation even in unconstrained, real-world environments \cite{L2CSNet2022}.
 
-\begin{itemize}
-    \item Natural Language Processing (NLP): Text completion, summarization, and sentiment analysis.
-    \item Scientific Research: Generating hypotheses, writing papers, and assisting in literature reviews.
-    \item Code Generation: Helping developers write, debug, and optimize code.
-    \item Content Creation: Crafting articles, reports, and other creative works.
-\end{itemize}
+Beyond gaze direction, other visual cues like head posture, facial expressions, and even contextual information about the objects of interaction (such as a book) contribute to a more holistic understanding of user attention. For instance, identifying the presence and state (open or closed) of a book within the reader's environment provides critical context. Object detection models, particularly efficient real-time systems like You Only Look Once (YOLO) \cite{Redmon_YOLO_2016} and its subsequent iterations \cite{Jocher_YOLOv5_2020, Wang_YOLOv9_2024, ultralytics_yolov8_2023}, can be trained to accurately locate and classify such objects. The integration of gaze data with the location of a target object, such as an open book, allows for a more direct inference of whether the user is attending to the reading material \cite{Zhu_GazeObjectFocus_2023, Lai_ReadingCompanion_2017}.
 
-\subsection{LLM Agent Framework}
-Large Language Models (LLMs) are advanced machine learning systems trained to process and generate human-like text based on a given prompt. They are typically built using transformer architectures, which excel at capturing contextual relationships in sequential data. LLMs are trained on vast amounts of text data to learn statistical patterns, enabling them to perform various tasks such as text generation, translation, summarization, and question-answering.\\
-The core functionality of an LLM revolves around predicting the probability of the next word or token in a sequence, conditioned on the preceding context. This allows LLMs to generate coherent and contextually relevant outputs. Over time, LLMs like GPT-3, GPT-4, and others have demonstrated impressive capabilities, including reasoning, coding, and creating content that appears human-authored.
+The overarching goal of developing AI-driven attention monitoring systems for reading is to empower users by providing them with actionable feedback and a deeper awareness of their attention patterns. Such systems can identify moments of waning focus or distraction, potentially alerting the user or logging these instances for later review, thereby fostering metacognitive skills and promoting more effective reading habits \cite{Albu_AttentionLearning_2023}. This project is situated within this evolving landscape, aiming to design, implement, and evaluate a system that monitors a user's attention while they are engaged in reading a physical book, leveraging gaze estimation and book detection to achieve this. The insights gained from such a system could have implications for educational technologies, personal productivity tools, and a better understanding of reader engagement.
 
-LLMs have been successfully applied in diverse domains, including but not limited to:
-
-\begin{enumerate}
-    \item Natural Language Processing (NLP): Text completion, summarization, and sentiment analysis.
-    \item Scientific Research: Generating hypotheses, writing papers, and assisting in literature reviews.
-    \item Code Generation: Helping developers write, debug, and optimize code.
-    \item Content Creation: Crafting articles, reports, and other creative works.
-\end{enumerate}
-
-\subsection{Aider: An LLM-Bases Coding Assistant}
-Aider is an open-source coding assistant designed to automate and streamline the software development process. It uses the capabilities of LLMs to understand natural language instructions, perform code generation, fix bugs, refactor existing codebases, and even implement new features based on developer input.
-
-Key Features of Aider:
+\section{Project Objectives}
+The primary aim of this project is to design, develop, and evaluate an AI-powered system for monitoring a user's attention during book reading sessions. The system leverages computer vision techniques to analyze visual cues from a standard webcam. The specific objectives formulated to guide the development of this project are as follows:
 
 \begin{itemize}
-    \item Code Implementation: Aider can understand the context of existing codebases and add new functionalities based on user prompts.
-    \item Error Handling: It identifies bugs and suggests fixes, enabling developers to debug their code more efficiently.
-    \item Refactoring: Aider can improve code readability, structure, and maintainability through automatic refactoring.
-    \item Advanced Integration: It can seamlessly integrate with various software libraries and tools, making it suitable for complex coding tasks.
-\end{itemize}
-Aider leverages cutting-edge LLM capabilities to achieve high success rates in implementing requested changes. For instance, its reliability has been benchmarked at approximately 18.9\% success on the SWE Bench, a collection of real-world GitHub issues.
-
-\section{Aims and Objectives}
-The main objective of this system is to create a completely autonomous form that can transform the existing research process by automating the critical components of scientific research. The system, with an integration of advanced computational techniques and machine learning, along with automated tools, aims to enhance the efficiency, reproducibility, and accessibility of scientific research. The overall objective remains to streamline the research process while allowing for faster discoveries and fostering collaboration, thereby democratizing access to high-quality research tools and methodologies.
-
-To achieve this aim, the project is guided by the following objectives:
-
-\begin{itemize}
-    \item \textbf{Idea Generation:} The system will leverage computational creativity and advanced algorithms to autonomously generate innovative research ideas. These ideas will be novel, feasible, and aligned with the specific needs and challenges of a given domain. The objective is to inspire groundbreaking research directions by harnessing the power of automation to explore a vast landscape of possibilities beyond human capabilities.
-
-    \item \textbf{Experimental Design and Execution:} A sound framework will be built for designing and executing experiments or simulations without human intervention. This framework will include choosing the experimental parameters, setting up experimental setups, and result collection. It will optimize experimental workflows in order to minimize human intervention and increase efficiency, accuracy, and scalability of research.
-
-    \item \textbf{Result Analysis and Logging:} The system will systematically analyze experimental outcomes based on advanced data analysis techniques. All findings will be logged, interpreted, and presented in a logical, structured, and academically compliant format so that results are not only accurate and meaningful but also effectively communicated in a way that reflects the highest scientific standards.
-
-    \item \textbf{Peer Review Simulation:} To ensure the quality and credibility of the research produced, the system will have a simulation of the peer-review process. This feature will check the relevance, originality, and rigour of the research outcomes. It will provide constructive feedback for maintaining high standards and helping in iterative improvement.
-
-    \item \textbf{Cost-Effectiveness:} The project recognizes the importance of accessibility and emphasizes that the system should operate within reasonable computational and financial parameters. This objective ensures that the system remains accessible to researchers and organizations with limited resources, thereby allowing broader participation and fostering inclusivity in scientific discovery.
-\end{itemize}
-
-\begin{figure}[htbp]
-    \centering
-
+    \item \textbf{To enhance reading focus and comprehension:} The foremost objective is to develop a system that assists users in improving their concentration while reading. This is to be achieved by providing real-time or near real-time feedback regarding their attention levels directed towards the reading material.
     
-    \begin{tikzpicture}[node distance=1.5cm, every node/.style={align=center}]
-        % Define styles
-        \tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, very thick]
-        \tikzstyle{decision} = [diamond, minimum width=3cm, minimum height=1cm, text centered, draw=black, very thick]
-        \tikzstyle{bottleneck} = [cloud callout, cloud puffs=12, cloud puff arc=120, aspect=3, inner ysep=1em, minimum width=1cm, minimum height=1cm, text centered, draw=black, ]
-        % Nodes
-        \node (start) [startstop] {Start Proposal};
-        \node (literature) [process, below of=start] {Conduct Literature Review};
-        \node (ideaValidation) [process, right of=literature, xshift=4cm] {Validate Idea Novelty};
-        \node (plan) [process, below of=literature, yshift=-5cm] {Draft Research Plan};
-        \node (ethics) [process, left of=plan, xshift=-4cm] {Address Ethics \\and Compliance};
-        \node (feedback) [process, below of=plan, yshift=-4.5cm] {Gather Feedback};
-        \node (submission) [process, left of=feedback, xshift=-4cm] {Submit Proposal};
-        \node (review) [process, below of=submission , yshift=-2cm ] {Await Peer Review}; 
-        \node (decision) [decision, right of=review, xshift=4cm] {Accepted?};
-        \node (end) [startstop, below of=decision, yshift=-2cm] {End Process};
-        
-        % Bottleneck markers
-        \node (b1) [bottleneck, left of=literature, xshift=-3cm, yshift=-3cm] {B1: \\ Time-Consuming};
-        \node (b2) [bottleneck, below of=ideaValidation, xshift=-1cm, yshift=-1.5cm] {B2: \\ Manual Novelty Check};
-        \node (b3) [bottleneck, below of=ethics, yshift=-1.5cm] {B3: \\ Compliance Delays};
-        \node (b4) [bottleneck, right of=feedback, xshift=3.25cm, yshift=2cm] {B4: \\ Limited Iteration};
-        \node (b5) [bottleneck, below of=review, yshift=-1cm] {B5: \\ Long Peer Review};
-        
-        % Arrows
-        \draw [arrow] (start) -- (literature);
-        \draw [arrow] (literature) -- (ideaValidation);
-        \draw [arrow] (literature) -- (plan);
-        \draw [arrow] (plan) -- (ethics);
-        \draw [arrow] (plan) -- (feedback);
-        \draw [arrow] (feedback) -- (submission);
-        \draw [arrow] (submission) -- (review);
-        \draw [arrow] (review) -- (decision); 
-        \draw [arrow] (decision) -- node[midway, above] {No} ++(3,0) |- (plan);
-        \draw [arrow] (decision) -- node[midway, right] {Yes} (end); 
-        
-        % Bottleneck Arrows
-        \draw [dashed, arrow, red] (b1) -- (literature);
-        \draw [dashed, arrow, red] (b2) -- (ideaValidation);
-        \draw [dashed, arrow, red] (b3) -- (ethics);
-        \draw [dashed, arrow, red] (b4) -- (feedback);
-        \draw [dashed, arrow, red] (b5) -- (review);
-    \end{tikzpicture}
-    \caption{Process Flow Diagram Highlighting Bottlenecks in Traditional Research Proposal Methods}
-    \label{fig:bottlenecks} % chktex 24
-\end{figure}
-
-
+    \item \textbf{To track and analyze attention patterns:} The project aims to implement functionalities for monitoring and recording the user's attention span over the course of reading sessions. This data can then be used to identify individual attention trends, common distraction points, and potential areas for improvement in reading habits.
+    
+    \item \textbf{To promote better reading habits:} By making users more aware of their attention fluctuations and the moments when their focus shifts away from the book, the system intends to encourage the development of more consistent and effective reading practices.
+    
+    \item \textbf{To develop a robust gaze estimation module:} A core technical objective is to integrate and utilize an accurate gaze estimation model (specifically, the L2CS model) capable of determining the pitch and yaw of the user's gaze from webcam input, serving as a primary indicator of visual attention.
+    
+    \item \textbf{To implement an effective book detection module:} The project seeks to develop a reliable object detection component using a custom-trained YOLO model (YOLOv12s) to identify the presence and state (e.g., "open\_book", "closed\_book") of a physical book within the camera's field of view.
+    
+    \item \textbf{To integrate gaze and book information for attention assessment:} A crucial objective is to fuse the data from the gaze estimation and book detection modules to intelligently infer whether the user's visual attention is directed towards an open book.
+    
+    \item \textbf{To design and implement a user interface for interaction and feedback:} The system aims to provide a user-friendly interface that allows users to initiate and manage monitoring sessions, view real-time feedback, and potentially access logs of their attention patterns. (Although the attention analyzer part was commented out, this was an initial objective).
+    
+\end{itemize}
+These objectives collectively address the challenge of maintaining focus during reading by creating a technological aid that is both informative and aims to be assistive for the user.
 
 \section{Significance of the Project}
-The significance of this project lies in its potential to transform how research is conducted and disseminated. Traditional research workflows often require substantial time, expertise, and resources, which can limit participation to well-funded institutions or individuals with specialized skills. This project addresses these challenges by focusing on several key areas:
-The significance of this project lies in its potential to transform how research is conducted and disseminated. Traditional research workflows often require substantial time, expertise, and resources, which can limit participation to well-funded institutions or individuals with specialized skills. This project addresses these challenges by focusing on several key areas.\\
-Firstly, by automating the research process, the project aims to reduce barriers for individuals or organizations with limited resources. This enhancement of accessibility will enable broader participation in scientific inquiry, allowing more diverse voices and perspectives to contribute to research efforts. Secondly, the implementation of streamlined workflows and the elimination of bottlenecks are central to this project. By doing so, the system will facilitate faster hypothesis testing and knowledge generation, significantly increasing the pace at which new discoveries can be made. Thirdly, automated systems can standardize experimental procedures and documentation, thereby reducing human errors and improving the reproducibility of research findings. This improvement is crucial for maintaining the integrity of scientific research and ensuring that results can be reliably replicated by other researchers.\\
-Additionally, by reducing the cost of conducting and publishing research, this project empowers smaller teams and underrepresented regions to contribute to global scientific advancements. This democratization of innovation fosters a more inclusive scientific community where diverse ideas can flourish. Finally, automation has the potential to encourage cross-domain exploration by minimizing the need for domain-specific expertise during the initial stages of hypothesis generation and experimentation. This capability can lead to novel interdisciplinary collaborations that might not have been possible within traditional research frameworks.
+The development of an AI-powered Book Reading Attention Monitoring system holds considerable significance across multiple domains, primarily by addressing the pervasive challenge of maintaining focused attention during reading and by exploring innovative applications of computer vision technologies. The importance of this project can be understood through its potential contributions to individual users, the field of human-computer interaction (HCI), and educational technology.
 
+
+\subsection{Enhancement of Individual Learning and Productivity}
+For individuals, particularly students and lifelong learners, the ability to maintain concentration is directly linked to comprehension and knowledge retention \cite{Albu_AttentionLearning_2023}. This project signifies a step towards providing a personalized tool that can help users become more aware of their attention patterns. By offering insights into when and potentially why their focus wanes, the system can empower users to develop more effective reading strategies, leading to improved learning outcomes and increased productivity during study or research sessions. The real-time feedback mechanism, as envisioned, could act as a gentle nudge, helping users to consciously redirect their attention back to their reading material.
+
+\subsection{Advancement in Non-Intrusive Attention Assessment}
+Traditionally, attention assessment has often relied on subjective self-reports, obtrusive physiological sensors, or controlled laboratory settings. This project contributes to the growing field of non-intrusive attention monitoring by leveraging readily available hardware like webcams. The application of computer vision techniques, specifically gaze estimation \cite{L2CSNet2022} and object detection \cite{Redmon_YOLO_2016}, for understanding reader engagement with physical books in a naturalistic setting is a significant area of exploration. It moves beyond screen-based attention tracking to address the common scenario of reading traditional print media.
+
+\subsection{Contribution to Human-Computer Interaction (HCI) and Affective Computing}
+Understanding and responding to a user's cognitive and affective state is a key goal in HCI and affective computing. This project's focus on detecting attention, a critical cognitive state, contributes to this domain. While the current scope is on attention, the underlying technologies for gaze and visual context understanding could be extended to infer other states like engagement, confusion, or fatigue, which are highly relevant for creating more adaptive and responsive interactive systems \cite{Sharma_AttentionClassroom_2023}. The development of systems like a "Reading Companion" \cite{Lai_ReadingCompanion_2017} underscores the interest in such interactive aids.
+
+\subsection{Potential for Educational Technology and Personalized Learning}
+While this project focuses on individual use, its principles have significant implications for educational technology. Data on attention patterns could, with appropriate ethical considerations and privacy safeguards \cite{Gupta_EthicalAIEd_2024}, inform the design of personalized learning interventions or provide educators with insights into student engagement during independent study. The ability to objectively gather data on how individuals interact with physical texts when trying to learn could be valuable for educational research.
+
+\subsection{Exploration of Real-World AI Applications:}
+The project serves as a practical application of advanced AI models in a real-world scenario. Successfully integrating gaze estimation (L2CS) and a custom-trained object detector (YOLO) to solve a specific problem (monitoring attention on a book) demonstrates the feasibility and utility of these technologies beyond theoretical research. It highlights the potential to build accessible tools that can run on user-end devices, promoting the democratization of AI-powered assistance.
+
+
+In summary, the significance of this project lies in its potential to provide a practical tool for improving reading focus, its contribution to the methods of non-intrusively monitoring attention, and its broader implications for creating more intelligent and adaptive systems in educational and personal productivity contexts. It addresses a common, everyday challenge with a modern technological approach.
 
 \section{Scope and Limitations}
-\subsection{Scope } 
-It is this initiative which aims to automate the basic parts of the research process especially with regard to idea generation experimentation, and result-documentation. While it's basically tested within a domain, namely computational science or machine learning, the base framework is quite easily modified for application to other disciplines with suitable adaptation. 
-The initiative further incorporates several tools and methodologies dedicated to the assessment of novelty, ensuring that the ideas produced do not simply replicate existing works. Through the implementation of automated review processes, the initiative aspires to emulate peer-review criteria while offering a thorough evaluation of the quality of research. This comprehensive strategy intends to improve both the integrity and significance of the research outputs produced by the system.
+\subsection{Scope of the Project}
+The scope of this project is the design, development, and evaluation of a software application that utilizes computer vision and deep learning techniques to monitor a user's visual attention while they are reading a physical book. The system processes input from a standard webcam in real-time. Key aspects within the project's scope include:
 
-\subsection{Limitations }
-Although the scope of this project is vast, it has to be well noted that some intrinsic boundaries exist:
-\begin{enumerate}
-    \item \textbf{Domain-specific limitations:} The system is likely to face challenges in specific domains that require exclusive information or proprietary datasets. It may not be so effective in certain research domains in which a subtle understanding is required.
-    
-    \item \textbf{Dependency on Computation Resources:} Availability and cost for computation resources determine the running cost of the system directly. Change in resource availability will have impact on the use of functionality by different types of users or organizations.
-    
-    \item \textbf{Implementation Challenges:} There is a possibility that bugs in the implementation have generated misleading results or part analyses due to the limitations. Accuracy and reliability are major challenges, and the algorithms at present need to be continuously refined.
-    
-    \item \textbf{Ethical Concerns:} There may be an opportunity for its abuse, such as preparing pseudo-scientific reports or unethical research submissions. These issues highlight the necessity of constant supervision and regulation in minimizing the risks involved with the automated production of research.
-    
-    \item \textbf{Human Oversight Required:} It does produce results and reports with results, but the wider implication often requires human insight, which limits the complete automation of the system and therefore underlines the importance of cooperation between automated tools and human researchers.
-    
-    \item \textbf{Current Failure Modes}  The framework, in its current form, has several shortcomings in addition to those already identified. These include, but are not limited to:
+\begin{itemize}
+    \item \textbf{User and Environment:} The system is intended for a single user engaged in reading a physical book, typically in a common indoor setting such as at a desk.
+    \item \textbf{Core Technologies Implemented:}
     \begin{itemize}
-        \item 
-        The idea generation process often results in very similar ideas across different runs and models. This issue may be addressed by allowing the system to follow up and delve deeper into its best ideas or by providing it with content from recently published projects as a source of novelty.
-        \item 
-        There is a failure to implement a significant fraction of the proposed ideas. Additionally, there are frequent issues with generating LaTeX that compiles correctly. While the system can produce creative and promising ideas, many are too challenging for it to implement effectively.
-        \item 
-        The framework may incorrectly implement an idea, which can be difficult to catch. An adversarial code-checking reviewer may partially address this issue; however, manual verification of implementations is essential before trusting reported results.
-        \item 
-
-        Due to the limited number of experiments conducted per idea, the results often do not meet the expected rigor and depth of a standard machine learning conference project. Moreover, the constraints on the number of experiments hinder fair comparisons that control for parameters, FLOPs, or runtime, leading to potentially deceptive or inaccurate conclusions. These issues are expected to improve as the costs of compute and foundation models decrease.
-        \item 
-
-        Currently, without utilizing vision capabilities, the system cannot correct visual issues in its outputs or interpret plots. For instance, generated plots may be unreadable, tables may exceed page width, and overall layout quality is often suboptimal. Future versions with integrated vision capabilities should address these concerns.
-        \item 
-
-        When writing, the framework sometimes struggles to find and cite the most relevant projects. It also frequently fails to reference figures correctly in LaTeX and may hallucinate invalid file paths.
-        \item 
-
-        Importantly, critical errors can occur when writing and evaluating results. For example, it struggles with comparing magnitudes of numbers—a known issue with LLMs. Additionally, when changing metrics (e.g., loss functions), it sometimes fails to consider this when comparing to baselines. To mitigate this risk, we ensure that all experimental results are reproducible by storing copies of all executed files.
-        \item 
-
-        Rarely, the system can hallucinate entire results. For example, earlier prompts instructed it to include confidence intervals and ablation studies; however, due to computational constraints, it did not always collect additional results and occasionally fabricated entire ablation tables. This was resolved by explicitly instructing the system to include only results it directly observed. Furthermore, it often hallucinates facts not provided by users, such as hardware specifications.
-        \item 
-        
-        More generally, we do not recommend taking the scientific content generated by this version at face value. Instead, we advise treating outputs as hints of promising ideas for further exploration by practitioners. Nonetheless, we expect the trustworthiness of the framework to increase significantly in tandem with improvements in foundation models. This document is shared primarily to illustrate current capabilities and suggest what may soon be possible. 
+        \item Integration and application of the L2CS model for real-time estimation of the user's gaze direction, yielding pitch and yaw angles.
+        \item Deployment of a custom-trained YOLOv12s object detection model for the identification of physical books and the classification of their state (e.g., "open\_book," "closed\_book") within the camera's view.
     \end{itemize}
-\end{enumerate}
-
-\section{Software Engineering Paradigms}
-
-Our project, which aims to revolutionize traditional research workflows through automation and enhanced accessibility, various software engineering paradigms play a critical role. Each paradigm contributes uniquely to the development, implementation, and sustainability of the automated research tools we intend to create. By leveraging these paradigms, we can ensure that our solutions are robust, scalable, and user-friendly.
-
-\subsection{Procedural Programming Paradigm}
-The \textbf{procedural programming paradigm} serves as a foundational approach for implementing core functionalities in the automated research tools. This paradigm emphasizes structured programming, which is essential for our project implementation. Through modular development, we break down tasks such as data collection, processing, and analysis into distinct procedures, allowing for easier debugging and maintenance. Code reusability is enhanced as functions can be reused across different modules of the project, improving efficiency and reducing development time. The paradigm's emphasis on simplicity ensures clear and straightforward code structures that facilitate understanding among team members, especially those new to the project. By using procedural languages like Python, we can leverage libraries that support scientific computing, enabling efficient program design and execution.
-
-\subsection{Object-Oriented Programming (OOP) Paradigm}
-
-The \textbf{object-oriented programming paradigm} is integral to managing the complexity of automated research tools. Encapsulation allows bundling data (e.g., experimental results) and methods (e.g., analysis algorithms) within objects, promoting data integrity and modularity. Through inheritance, we can create a class hierarchy that defines general behaviors in base classes that can be extended for specific types of experiments or analyses, facilitating code reuse. Polymorphism enables us to define generic methods that can operate on objects of different classes, allowing for flexible integration of new features as the project evolves. Languages such as Python may be employed to implement these principles effectively, providing a robust framework for building complex systems.
-
-\subsection{Functional Programming Paradigm}
-
-The \textbf{functional programming paradigm} enhances our ability to handle data processing tasks efficiently. First-class functions can be passed as arguments or returned from other functions, facilitating higher-order functions that simplify complex data transformations. The use of immutable data structures ensures that data integrity is maintained throughout various stages of research, reducing errors associated with mutable states. The declarative code approach allows researchers to express their intent without delving into implementation details, making the code more intuitive. By incorporating functional programming languages like Haskell or Scala for specific components, we can take advantage of their strengths in handling large datasets and promoting concise code.
-
-\subsection{Agile Software Development Paradigm}
-
-The adoption of the \textbf{Agile software development paradigm} is vital for ensuring responsiveness to user needs throughout the project lifecycle. Through iterative development, we break down the project into sprints, allowing for continuous feedback from users—researchers who will utilize these tools—to refine features and improve usability. Customer collaboration ensures that stakeholders are engaged throughout the development process, ensuring that the tools meet their needs effectively and fostering a sense of ownership and increasing adoption rates. Regular retrospectives enable our team to reflect on processes and outcomes, facilitating ongoing enhancements in both product quality and team dynamics. This Agile approach ensures that we remain adaptable to changing requirements while delivering value consistently.
-
-\subsection{DevOps Paradigm}
-
-The integration of the \textbf{DevOps paradigm} is crucial for ensuring smooth collaboration between development and operations teams. Continuous Integration/Continuous Deployment (CI/CD) automates testing and deployment processes, ensuring that updates to our research tools are delivered quickly and reliably, minimizing downtime for users. Infrastructure as Code (IaC) allows us to manage cloud resources programmatically, enabling efficient scaling according to user demand without manual intervention. Implementation of monitoring solutions provides insights into tool performance in real-time, enabling proactive adjustments based on user interactions. By adopting DevOps practices, we enhance collaboration across teams while ensuring high-quality software delivery.
-
-\subsection{Software as a Service (SaaS) Paradigm}
-
-The emergence of the \textbf{Software as a Service (SaaS) paradigm} aligns perfectly with our project's goals of accessibility and democratization. Remote access enables users to access our automated research tools via any internet-connected device without needing local installations, thereby broadening participation from diverse geographical regions. Our SaaS model provides scalability that allows us to dynamically adjust resources based on user demand, ensuring optimal performance during peak usage times without significant upfront costs. A subscription-based pricing model lowers financial barriers for smaller institutions or individual researchers, promoting inclusivity in scientific research. This SaaS approach enables us to provide powerful research tools while fostering innovation across various sectors.
-
-\section{Overview of the Structure}
-This report is organized into six chapters, each building upon the previous to provide a comprehensive understanding of the project and its outcomes. The structure ensures clarity and logical progression, covering all essential aspects from conceptualization to execution and reflections.
-
-\begin{itemize}[leftmargin=2.15cm, labelwidth=1.5cm]
-    \item[\textbf{Chapter 1:}] \textbf{Introduction}\\
-    The introduction provides the foundation for the project, outlining its motivation, objectives, and significance. This chapter contextualizes the problem addressed by the project and highlights the potential impact of its successful implementation. It also defines the scope of the work, setting the stage for the subsequent chapters.
-
-    \item[\textbf{Chapter 2:}] \textbf{Methodology}\\
-    This chapter details the systematic approach adopted for the project. It describes:
+    \item \textbf{Primary Functionality:}
     \begin{itemize}
-        \item Project Overview: An outline of the project and its conceptual framework
-        \item Design and Strategy: The strategies used to achieve the objectives
-        \item Data Collection Methods: The methods employed for data collection and analytical techniques
-        \item Ethical Considerations: Ethical considerations and limitations encountered during the process
+        \item Continuous detection of the user's face and real-time estimation of their gaze vector.
+        \item Robust detection of physical books and determination of whether they are open or closed.
+        \item Real-time, frame-by-frame assessment of the user's attention towards an open book. This is achieved by:
+            \begin{enumerate}
+                \item Calculating a 3D gaze vector from the estimated pitch and yaw.
+                \item Determining if this gaze vector intersects with the detected bounding box of an open book.
+            \end{enumerate}
+        \item Visual feedback to the user via an on-screen display, showing the webcam feed augmented with information such as detected face/book bounding boxes, gaze direction indicators, and the current attention status (e.g., "Attentive," "Distracted," "No book detected").
     \end{itemize}
-    The methodology lays out a plan of action, ensuring a structured and replicable approach to solving the identified problem.
-
-    \item[\textbf{Chapter 3:}] \textbf{Implementation}\\
-    This chapter delves into the technical execution of the project. It covers:
+    \item \textbf{Attention Data Generation:} The system generates per-frame data detailing the gaze pitch and yaw, face bounding box, book bounding box, book state, and the inferred attention status. This foundational data can be used for:
     \begin{itemize}
-        \item Development Environment: An overview of the tools and technologies used
-        \item Execution Process: A step-by-step process of executing project tasks
-        \item Timeline and Resource Allocation: A timeline of project phases
-        \item Challenges and Strategies: Challenges faced during implementation
-        \item Success Factors: Key factors that contributed to achieving the objectives
+        \item Providing immediate visual feedback on attention.
+        \item The basis for potential future extensions such as session-based attention percentage calculation and the generation of detailed attention logs for pattern analysis, as outlined in the initial project requirements .
     \end{itemize}
-
-    \item[\textbf{Chapter 4:}] \textbf{Results and Discussion}\\
-    This chapter presents the outcomes of the project, including:
-    \begin{itemize}
-        \item Key Findings: Important findings derived from experiments
-        \item Visual Representations: Graphs, tables, and charts to support analysis
-        \item Insights Gained: Insights from results and comparisons
-        \item Challenges Observed: Challenges and anomalies during experimentation
-    \end{itemize}
-
-    \item[\textbf{Chapter 5:}] \textbf{Conclusions and Discussion}\\
-    This chapter provides a summary of the entire project, discussing:
-    \begin{itemize}
-        \item Implications of Findings: The implications for the field
-        \item Recommendations for Further Research: Suggestions for future work
-        \item Limitations Encountered: Limitations faced during the project
-    \end{itemize}
+    \item \textbf{Platform and Development:} The system is developed as a desktop application using Python, with core libraries including OpenCV, PyTorch, and Ultralytics for computer vision and deep learning tasks.
 \end{itemize}
+The project thus demonstrates the technical pipeline for real-time visual attention assessment in the context of reading physical books by integrating advanced gaze and object detection models.
+
+\subsection{Limitations of the Project}
+Despite the system's capabilities in per-frame attention assessment, several limitations should be acknowledged, stemming from the inherent complexities of AI models, environmental variables, and the defined scope of the project:
+
+\begin{itemize}
+    \item \textbf{Accuracy and Robustness of AI Models:} The overall system performance is intrinsically tied to the accuracy of the L2CS gaze estimation and the YOLOv12s book detection models. Their effectiveness can be compromised by:
+    \begin{itemize}
+        \item \textbf{Environmental Factors:} Suboptimal lighting (dim, glare, strong backlighting), shadows, and visually complex or cluttered backgrounds may degrade detection and estimation accuracy.
+        \item \textbf{Occlusions:} Partial obstruction of the user's eyes or face (e.g., by hands, certain types of eyewear) can affect gaze estimation. Similarly, if the book is significantly occluded, its detection and state classification may falter.
+        \item \textbf{Gaze Estimation Specifics:} L2CS provides gaze direction (pitch/yaw). While indicative of focus, it does not provide a pixel-precise point-of-gaze on the book page. The model's accuracy can also be user-dependent and influenced by camera distance and angle.
+        \item \textbf{Book Detector Generalizability:} The custom-trained YOLO model's ability to detect various books accurately depends on the breadth and diversity of its training dataset. Performance might vary with unusual book sizes, covers, or in novel environments.
+    \end{itemize}
+
+    \item \textbf{Definition and Inference of Attention:} The system defines and infers attention based on a measurable visual cue: gaze direction towards a detected open book. This is a proxy for attention and does not:
+    \begin{itemize}
+        \item Directly measure cognitive engagement or reading comprehension. A user could be looking at an open book but be mentally disengaged.
+        \item Account for nuanced reading behaviors, such as brief glances away for reflection, which might be misclassified as inattention by a purely gaze-book intersection logic.
+    \end{itemize}
+    
+    \item \textbf{Session-Level Metrics and Alerts:} While the system provides real-time, per-frame attention status, the implementation of more advanced session-level features as envisioned in the project requirements such as triggering alerts based on sustained inattention (e.g., after a specific duration), calculating overall session attention percentages, or generating detailed structured logs for long-term pattern analysis—are foundational. The current core logic focuses on instantaneous attention state per frame. Extending this to robust session-long analytics would require additional state management and temporal analysis logic.
+    
+    \item \textbf{User Movement and Positioning:} The system performs optimally when the user is relatively stable and positioned appropriately within the camera's view. Frequent or significant head and body movements might reduce the accuracy of continuous face and gaze tracking.
+    
+    \item \textbf{Computational Load:} Real-time execution of multiple deep learning models (gaze estimation and object detection) on each video frame is computationally demanding. System responsiveness (e.g., FPS, latency of feedback) can be heavily influenced by the available CPU/GPU resources on the user's machine.
+    
+    \item \textbf{Focus on Physical Books:} The methodology is specifically tailored for monitoring attention while reading physical books. It is not designed or evaluated for reading on digital devices like e-readers, tablets, or computer screens, which would require different contextual cues or interaction models.
+    
+    \item \textbf{Types of Distractions Addressed:} The system primarily identifies visual inattention (gaze directed away from the book). It cannot inherently detect or account for other forms of distraction, such as auditory disturbances or internal cognitive distractions (e.g., mind-wandering), if the user's gaze remains on the book.
+\end{itemize}
+Understanding these limitations is essential for interpreting the system's current output and for guiding future development efforts to enhance its robustness and expand its feature set.
+
+\section{Overview of the Thesis Structure}
+This thesis is organized into several chapters, each addressing specific aspects of the research and development of the AI-powered Book Reading Attention Monitoring system. The structure is designed to guide the reader from the foundational concepts and motivations through the technical implementation, results, and concluding reflections.
+
+\begin{itemize}
+    \item \textbf{Chapter 1: Introduction} lays the groundwork for the thesis. It begins with background information on the importance of reading attention and the potential of AI in this domain. This is followed by a clear statement of the project objectives, the significance of the research, and a definition of the project's scope and its inherent limitations. The chapter concludes with this overview of the thesis structure.
+
+    \item \textbf{Chapter 2: Literature Review} (added section) delves into existing academic and technical literature relevant to the core components of this project. It covers established and recent advancements in gaze estimation techniques, real-time object detection methodologies (with a focus on YOLO and its applicability for book detection), and various approaches to attention monitoring and reader engagement analysis using computer vision.
+
+    % \item \textbf{Chapter 3: Minor Project Activities} details the activities undertaken during the project lifecycle, potentially focusing on preliminary work or specific developmental phases. It describes these activities, outlines the skills developed, discusses challenges encountered and overcome, highlights achievements and contributions made during this phase, and reflects on the learning outcomes derived from these specific activities.
+
+    \item \textbf{Chapter 3: Methodology} outlines the research design and approach adopted for this project. It provides an overview of the project's architecture, details the methods used for data collection (such as the creation of the custom book dataset), and explains the techniques employed for data analysis, including the logic for gaze-book intersection. Ethical considerations pertaining to the project and any limitations of the chosen methodology are also discussed.
+
+    \item \textbf{Chapter 4: Implementation} provides a comprehensive account of the system's development. This includes a description of the development environment, tools, and libraries used. It details the execution of the project, including the implementation of the gaze estimation module (L2CS), the book detection module (YOLOv12s), and their integration into the attention monitoring application. Any project timeline, resource allocation, challenges faced during implementation, success factors, and key lessons learned are also presented.
+
+    \item \textbf{Chapter 5: Results and Discussion} presents the outcomes of the project. This chapter will focus on the performance of the developed modules, such as the accuracy of the book detector and the functionality of the gaze estimator. It will include an interpretation of these results and a discussion of the key findings in the context of the project objectives. Limitations encountered during testing and potential future directions for improving the results are also explored.
+
+    \item \textbf{Chapter 6: Learning Outcome} summarizes the overall findings of the project and assesses the achievement of the initial objectives. It discusses the implications of the project's outcomes, offers recommendations, and explores the future scope for extending the system's capabilities. This chapter also includes personal reflections on the learning journey throughout the project.
+
+    \item \textbf{Chapter 7: Conclusion and Broader Impact} (Interpreting the PDF's "Conclusion and Future Scope" which seems focused on development) provides a concluding perspective, focusing on the skills developed, knowledge gained during the project, aspects of professional development, personal growth experienced, and potential future applications of the developed system or the acquired expertise.
+
+    \item \textbf{References} lists all the academic papers, articles, books, and other resources cited throughout the thesis, providing the basis for the literature review and supporting technical discussions.
+
+    \item \textbf{Appendices} (if applicable) may include supplementary materials such as detailed model configurations, code snippets, or extensive data tables not suitable for the main body of the thesis.
+\end{itemize}
+This structure is intended to provide a clear and logical progression of the research undertaken.

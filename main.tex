@@ -1,20 +1,23 @@
 \documentclass[a4paper,12pt]{report}
 
 \usepackage{tikz}
-\usetikzlibrary{shapes.geometric, arrows}
+\usetikzlibrary{shapes.geometric, arrows, arrows.meta, calc, fit}
 \usetikzlibrary{patterns, shapes.callouts} 
+\usetikzlibrary{positioning}
 
 \usepackage{listings}
 \usepackage{color}
 
 \usepackage{background}
 \usepackage{geometry}
+\usepackage{pgfgantt}
 \usepackage{fancyhdr}
 \usepackage{mathptmx}
 \usepackage{biblatex}
 \addbibresource{references.bib}
 \usepackage[T1]{fontenc} 
 \usepackage{ragged2e}
+\usepackage{amsmath}
 \usepackage{enumitem}
 \usepackage{titlesec}
 \usepackage{setspace}
@@ -121,6 +124,7 @@
 
 
 \include{otherpages/listoffigures.tex}
+\include{otherpages/listoftables.tex}
 
 \include{otherpages/abstract.tex}
 
@@ -130,6 +134,8 @@
 \pagenumbering{arabic}
 \include{chapters/Introduction.tex}
 
+\newpage
+\include{chapters/Literature_Review.tex}
 
 \newpage
 \include{chapters/Methodology.tex}
@@ -143,6 +149,8 @@
 \newpage
 \include{chapters/Conclusion.tex}
 
+\newpage
+\include{chapters/Learning_Outcome.tex}
 
 \newpage
 \printbibliography[title=References]

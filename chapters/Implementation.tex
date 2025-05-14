@@ -3,79 +3,258 @@
 \hspace{-1cm}\rule{19cm}{0.4pt} 
 
 \section{Development Environment}
-\subsection{Software Tools and Frameworks}
-The development environment for this project was carefully selected to ensure maximum efficiency and productivity. Python emerged as the natural choice for our primary programming language, owing to its robust ecosystem of scientific computing libraries and extensive community support. The project heavily relied on essential Python libraries such as NumPy for numerical computations, Pandas for data manipulation and analysis, and SciPy for advanced scientific computations. For data visualization needs, we utilized Matplotlib and Seaborn, which provided sophisticated plotting capabilities that helped us create compelling visual representations of our experimental results.\\In the realm of machine learning, PyTorch~\cite{Paszke2019PyTorch} served as our cornerstone framework. Its dynamic computational graphs and intuitive API made it ideal for implementing and testing various neural network architectures. The framework's excellent documentation and active community support significantly accelerated our development process, particularly during the experimental phases where rapid prototyping was crucial.\\For natural language processing tasks, we integrated several state-of-the-art language models through their respective APIs. These included Gemini~\cite{2023arXiv231211805G}, known for its advanced reasoning capabilities, GPT4o~\cite{openai2023} for its versatile text generation abilities, Claude-3.5-Sonnet for its analytical prowess, LLaMA 3.1~\cite{llama2023} for its efficient performance, and Qwen 2.5~\cite{qwen2.5} for specialized tasks. This diverse array of language models enabled us to handle various aspects of automated research paper generation and analysis effectively.\\Version control was managed through Git, with GitHub serving as our primary repository platform. This setup facilitated seamless collaboration among team members while maintaining a comprehensive history of code changes and documentation. The repository structure was organized to maximize clarity and accessibility, with detailed documentation accompanying each major component of the system.\\Our development workflow was enhanced by utilizing both Jupyter Notebook and Visual Studio Code as our primary development environments. Jupyter Notebook proved invaluable for rapid prototyping and interactive development, allowing us to test code snippets and visualize results in real-time. Visual Studio Code, with its extensive plugin ecosystem and integrated debugging capabilities, served as our main IDE for developing the core system components.
+The development of the Book Reading Attention Monitoring system was carried out using a combination of specific hardware and software tools. This section outlines the key components of the development environment that facilitated the project's implementation.
 
-\subsection{Hardware Resources}
-The computational infrastructure of our project was built upon a foundation of cloud-based solutions, primarily leveraging the capabilities of Google Cloud Platform (GCP) and Amazon Web Services (AWS). These platforms provided us with access to high-performance GPU instances, which were essential for executing computationally intensive machine learning experiments. The scalability of cloud resources allowed us to dynamically adjust our computational capacity based on workload demands, ensuring optimal resource utilization throughout the project lifecycle.\\Our data storage strategy was implemented using a combination of AWS S3 and Google Cloud Storage services. These cloud storage solutions offered reliable, secure, and scalable options for managing our extensive datasets, experimental results, and model checkpoints. The ability to access these resources from anywhere proved particularly valuable for our distributed team, enabling seamless collaboration and data sharing across different geographical locations.
+\subsection{Hardware}
+The primary hardware components utilized or assumed for the development and operation of the system include:
+\begin{itemize}
+    \item \textbf{Computer System:} A standard desktop or laptop computer capable of running Python and the associated deep learning libraries. Specifications would typically include a multi-core CPU (e.g., Intel Core i5/i7 series or AMD Ryzen equivalent).
+    \item \textbf{Graphics Processing Unit (GPU):} While not strictly mandatory for all components, a CUDA-enabled NVIDIA GPU was highly recommended and utilized for significantly accelerating the training of the custom YOLO model and for faster inference speeds of both the L2CS and YOLO deep learning models during real-time operation. Operations can fall back to CPU if a GPU is unavailable, albeit with a performance reduction.
+    \item \textbf{Webcam:} A standard USB webcam or an integrated laptop camera was used as the primary input device for capturing the live video feed of the user. The system was designed to be compatible with common webcam resolutions (e.g., 720p, 1080p). IP cameras were also considered as a potential source, as handled by the \texttt{CameraManager}.
+    \item \textbf{Memory (RAM):} A minimum of 8GB RAM was considered suitable, with 16GB or more being preferable, especially during model training and when running multiple processes.
+    \item \textbf{Storage:} Sufficient disk space for storing the project codebase, Python environment, deep learning model weights, custom datasets, and log files.
+\end{itemize}
 
-\subsection{Collaboration Tools}
-Project management was streamlined through the implementation of modern collaboration tools. We utilized Jira for comprehensive project tracking, which allowed us to maintain detailed sprint plans, track issue resolution, and monitor overall project progress. The tool's advanced reporting capabilities provided valuable insights into team productivity and project velocity, helping us identify and address potential bottlenecks in our development process.\\Team communication was facilitated through Slack, which served as our primary platform for real-time discussions and updates. We established dedicated channels for different aspects of the project, enabling focused discussions on specific topics while maintaining a searchable archive of all communications. This structured approach to communication proved essential in maintaining team cohesion and ensuring that all team members remained aligned with project goals and objectives.
+\subsection{Software}
+The software stack for this project is primarily based on Python and its rich ecosystem of libraries for computer vision and deep learning.
+\begin{itemize}
+    \item \textbf{Operating System:} The system was developed to be cross-platform, with successful operation intended on Windows, macOS, or Linux distributions. Development was primarily conducted on [Specify your OS, e.g., Windows 10/11, Ubuntu 20.04 LTS, macOS Monterey].
+    \item \textbf{Programming Language:} Python (version 3.8 or higher) was used as the sole programming language for the entire project implementation due to its extensive library support for AI/ML development, ease of use, and rapid prototyping capabilities.
+    \item \textbf{Core Libraries and Frameworks:} The \texttt{requirements.txt} file specifies the key Python dependencies. The most critical libraries and frameworks employed are:
+    \begin{itemize}
+        \item \textbf{OpenCV (cv2)} (\texttt{opencv-python >=4.7.0}): Utilized extensively for all computer vision tasks, including camera interaction, frame reading, image processing (resizing, drawing overlays), and displaying the video feed.
+        \item \textbf{PyTorch} (\texttt{torch >=2.0.0}, \texttt{torchvision >=0.15.0}): The primary deep learning framework used for both the L2CS gaze estimation model and the YOLOv12s object detection model. It was used for model loading, inference, and managing tensor operations, especially on the GPU.
+        \item \textbf{Ultralytics YOLO:} The Ultralytics framework was used for implementing and training the custom YOLOv12s model for book detection. This library provides a high-level API for working with various YOLO architectures. (Note: This is a key dependency inferred from the code, e.g., \texttt{from ultralytics import YOLO}).
+        \item \textbf{L2CS-Net Library (\texttt{l2cs})}: The official implementation or a compatible wrapper for the L2CS gaze estimation model was used to perform inference and obtain pitch/yaw gaze angles. (Note: This is a key dependency inferred from the code, e.g., \texttt{from l2cs import Pipeline}).
+        \item \textbf{NumPy} (\texttt{numpy >=1.22.0}): Essential for numerical operations, especially for handling image data as multi-dimensional arrays and for mathematical calculations involved in gaze vector processing.
+        \item \textbf{ONNX and ONNXRuntime} (\texttt{onnx >=1.13.0}, \texttt{onnxruntime >=1.13.0}): While the primary models (L2CS .pkl, YOLO .pt) might be loaded directly in their native formats, these libraries are often included for model conversion, optimization, or broader deployment compatibility, suggesting they might have been explored or used in an intermediate step.
+        \item \textbf{python-dotenv} (\texttt{python-dotenv >=0.21.0}): Used for managing environment variables, potentially for configurations like API keys or model paths if an \texttt{.env} file was used, though not extensively shown in the core logic.
+    \end{itemize}
+    \item \textbf{Development Tools:}
+    \begin{itemize}
+        \item \textbf{Integrated Development Environment (IDE):} [Specify your IDE, e.g., Visual Studio Code, PyCharm Community/Professional Edition] was used for code writing, debugging, and project management.
+        \item \textbf{Version Control System:} Git was used for version control, with the project hosted on a GitHub repository. This facilitated tracking changes, collaboration (if any), and codebase management.
+        \item \textbf{Annotation Tool(s):} For creating the custom book dataset, an image annotation tool such as [Specify tool if known, e.g., Roboflow's annotation interface, LabelImg, CVAT] was employed to draw bounding boxes and assign labels for "open\_book" and "closed\_book" classes.
+    \end{itemize}
+\end{itemize}
+This environment provided the necessary capabilities for developing, training (for the YOLO model), and testing the attention monitoring system.
 
-\section{Project Implementation}
-\subsection{Execution Stages}
-\begin{enumerate}[leftmargin=2cm, labelwidth=1.5cm]
-    \item[\textbf{Stage 1:}] \textbf{Idea Generation and Experiment Design} \\
-    The first stage was the generation of research ideas based on predefined templates and input parameters. The ideas were then screened for novelty using APIs such as Semantic Scholar, which cross-referenced existing research to ensure that the proposed concepts were novel~\cite{Shea2024PlaneSearch}. Based on these validated ideas, experiment designs were developed, with an emphasis on feasibility and computational efficiency.
+\section{Project Execution}
+The execution of the Book Reading Attention Monitoring project followed a structured, modular approach, progressing through several distinct stages from initial setup to the integration of the final system. The development process was iterative, allowing for refinements as each component was built and tested.
 
-    \item[\textbf{Stage 2:}] \textbf{Experimentation and Data Collection} \\
-    The automated experiments were run using a combination of available datasets and generated data. To account for variability and get robustness, the system ran multiple iterations of each experiment. All experiment parameters, results, and configurations were logged and stored for later analysis.
+\begin{enumerate}
+    \item \textbf{Environment Setup and Initial Planning:}
+    The first step involved setting up the development environment as detailed in Section 4.1. This included installing Python, all required libraries (OpenCV, PyTorch, Ultralytics, L2CS, etc.), and configuring the IDE and version control. Simultaneously, the project requirements were finalized, and a detailed plan for module development and integration was laid out, building upon the initial research and design phase.
 
-    \item[\textbf{Stage 3:}] \textbf{Analysis and Result Documentation} \\
-    Analysis was conducted on the collected data through statistical tools after performing the experiments. Key metrics were used to evaluate accuracy, novelty score, and computational efficiency for each experiment. The findings were recorded in an academic format; the results were summarized visually, and further details could be found in the report narrative.
+    \item \textbf{Development of Core Modules:}
+    The system was developed in a modular fashion, with each key component implemented and tested, often in isolation, before integration:
+    \begin{itemize}
+        \item \textbf{Camera Management (\texttt{CameraManager}):} Implementation of the \texttt{CameraManager} class to handle robust access to various camera sources (webcam, video files, IP streams), manage frame capture, and provide basic display functionalities.
+        
+        \item \textbf{Gaze Estimation (\texttt{GazeEstimator}):} Integration of the pre-trained L2CS model. This involved writing the \texttt{GazeEstimator} class to load the model, process input frames, run inference to obtain pitch, yaw, and face bounding boxes, and structure the output data.
+        
+        \item \textbf{Book Detection (\texttt{BookDetector} and Custom YOLO Training):} This was a significant sub-project.
+        \begin{itemize}
+            \item \textit{Dataset Curation:} As described in Section 3.3 (Data Collection Methods), this involved sourcing initial images from Roboflow Universe and capturing a substantial number of custom images to create a diverse dataset for "open\_book" and "closed\_book" states.
+            \item \textit{Annotation:} Meticulous annotation of this dataset with bounding boxes and class labels.
+            \item \textit{YOLOv12s Model Training:} Utilizing the Ultralytics YOLO framework to train the custom YOLOv12s model on the prepared dataset. This involved selecting appropriate hyperparameters, training for a sufficient number of epochs, and evaluating the model's performance on a validation set.
+            \item \textit{Implementation:} The \texttt{BookDetector} class (or internal YOLO usage within \texttt{AttentionMonitor}) was implemented to load the trained custom weights and perform inference on video frames to detect books and their states.
+        \end{itemize}
+        
+        \item \textbf{Attention Analysis Logic (\texttt{AttentionMonitor}):} Development of the \texttt{AttentionMonitor} class. This included:
+        \begin{itemize}
+            \item Implementing the conversion of pitch/yaw angles to a 3D gaze vector.
+            \item Designing and coding the ray-book bounding box intersection algorithm (\texttt{\_ray\_box\_intersection}) to determine if the user's gaze vector intersects with the detected open book.
+            \item Establishing the decision logic to classify attention status based on face detection, open book detection, and the intersection result.
+        \end{itemize}
+        
+        \item \textbf{Session Orchestration (\texttt{SessionManager}):} Creation of the \texttt{SessionManager} class to act as the central coordinator. This module is responsible for:
+        \begin{itemize}
+            \item Initializing and managing all other modules.
+            \item Handling the main application loop: capturing frames, dispatching them to analysis modules (potentially using threading for smoother performance, as indicated by the use of \texttt{Queue} in the code).
+            \item Aggregating results from the gaze, book, and attention analysis modules.
+            \item Managing the real-time display of the processed video feed with informative overlays (gaze direction, book boxes, attention status).
+        \end{itemize}
+        \item \textbf{Utility Functions (\texttt{helpers.py}):} Development of any helper functions needed across the project, such as logging setup or image manipulation routines.
+    \end{itemize}
 
-    \item[\textbf{Stage 4:}] \textbf{Peer Review and Evaluation} \\
-    The last step was an automated review to evaluate the quality of the produced research. The system reviewed its own papers with an internal quality control mechanism to ensure that all parts of the paper were written according to academic standards. This was followed by an external review from simulated peers to validate the results further.
+    \item \textbf{Integration and System Testing:}
+    Once individual modules reached a stable state, they were integrated into the main application framework managed by the \texttt{SessionManager}. This phase involved:
+    \begin{itemize}
+        \item Ensuring correct data flow and communication between modules.
+        \item Testing the end-to-end pipeline from camera input to attention status output and display.
+        \item Debugging issues arising from the interaction of different components.
+        \item Performing functional tests under various simulated reading scenarios to observe the system's behavior.
+    \end{itemize}
+
+    \item \textbf{Iterative Refinement and Documentation:}
+    Throughout the execution, an iterative approach was adopted. Issues identified during testing led to refinements in the code, model parameters (for YOLO), or algorithmic logic. Simultaneously, documentation of the code and project structure was maintained. The \texttt{report/} directory suggests that component-wise documentation was also being prepared.
 \end{enumerate}
+The project execution focused on building a robust proof-of-concept, prioritizing the successful implementation and integration of the core AI-driven attention monitoring pipeline.
 
-\section{Project Timeline}
-\begin{enumerate}[leftmargin=2cm, labelwidth=1.5cm]
-    \item[\textbf{Phase 1:}] \textbf{Planning and Setup (Weeks 1-2)} \\ % chktex 8
-    Defining Project Scope and Objectives: Establishing clear goals and outlining the project's aims.
-    Setting Up Development Environment and Tools: Configuring software tools, frameworks, and hardware resources necessary for the project.
-    Preparing Initial Datasets and Templates: Compiling relevant datasets and creating templates for experimentation to ensure readiness for subsequent phases.
 
-    \item[\textbf{Phase 2:}] \textbf{Idea Generation and Experiment Design (Weeks 3-4)} \\ % chktex 8
-    Generating and Validating Research Ideas: Utilizing predefined templates and input parameters to create innovative research ideas, followed by novelty assessment using APIs.
-    Designing Experiments: Developing detailed experimental designs based on validated ideas, focusing on feasibility and computational efficiency.
-    Implementing the System for Autonomous Experiments: Setting up the automated system to conduct experiments without manual intervention.
+\section{Timeline}
+The development of the Book Reading Attention Monitoring system was executed over a period of [Specify Duration, e.g., approximately X months/weeks, or one academic semester], commencing from [Start Date/Month, Year] to [End Date/Month, Year]. The project was broken down into several key phases, each with an estimated timeframe. While minor overlaps and adjustments occurred, the planned timeline provided a roadmap for the project's progression.
 
-    \item[\textbf{Phase 3:}] \textbf{Experimentation and Data Collection (Weeks 5-6)} \\ % chktex 8
-    Executing Experiments: Running automated experiments using existing datasets and generated data to collect results.
-    Implementing Feedback Loops: Refining experimental designs based on initial results to enhance robustness and reliability.
 
-    \item[\textbf{Phase 4:}] \textbf{Data Analysis and Documentation (Weeks 7-8)} \\ % chktex 8
-    Analyzing Experimental Data: Applying statistical tools and machine learning methods to identify trends and insights from the collected data.
-    Generating Visualizations and Writing Reports: Creating visual representations of the data and documenting findings in an academic format.
+\begin{description}
+    \item \textbf{Phase 1: Conceptualization, Literature Review, and Requirement Analysis (Estimated: X weeks)}
+    \begin{itemize}
+        \item Defining project scope, objectives, and initial requirements.
+        \item Conducting a comprehensive literature review on gaze estimation, object detection (YOLO), and attention monitoring techniques.
+        \item Assessing available tools, libraries, and pre-trained models (L2CS, YOLO).
+        \item Finalizing the system architecture and technological stack.
+    \end{itemize}
 
-    \item[\textbf{Phase 5:}] \textbf{Review and Final Evaluation (Weeks 9-10)} \\ % chktex 8
-    Conducting Internal and External Reviews: Evaluating the quality of research outputs through an automated review process followed by simulated peer reviews.
-    Refining Final Documentation: Making necessary adjustments to the report based on feedback received during the review stage, preparing for submission.
-\end{enumerate}
+    \item \textbf{Phase 2: Dataset Preparation and Model Training (Estimated: Y weeks)}
+    \begin{itemize}
+        \item Sourcing initial book images from public repositories (e.g., Roboflow Universe).
+        \item Capturing and curating a custom dataset of book images (open/closed states, diverse conditions).
+        \item Annotating the custom dataset with bounding boxes and class labels.
+        \item Training the YOLOv12s model for book detection, including hyperparameter tuning and validation.
+    \end{itemize}
 
-\section{Resource Management}
-Effective resource management is crucial for the successful execution of projects. This section outlines the key human, computational, and financial resources utilized in our recent project.
+    \item \textbf{Phase 3: Core Module Development (Estimated: Z weeks)}
+    \begin{itemize}
+        \item Implementing the \texttt{CameraManager} for video input.
+        \item Integrating the L2CS model into the \texttt{GazeEstimator} module.
+        \item Implementing the \texttt{BookDetector} using the trained custom YOLO model.
+        \item Developing the core logic for the \texttt{AttentionMonitor}, including gaze-book intersection.
+        \item Implementing the \texttt{SessionManager} for overall orchestration and basic UI.
+    \end{itemize}
 
-\subsection{Human Resources}
-The human resources involved in the project played a pivotal role in ensuring that all tasks were executed efficiently and effectively. The team consisted of several key members, each bringing unique skills and expertise to the project. The Project Manager was responsible for overseeing the overall progress of the project, including setting milestones, tracking deliverables, and ensuring that the project adhered to its timeline. They facilitated effective communication among team members and stakeholders, addressing any issues that arose promptly. Their leadership ensured that the project remained aligned with its goals and objectives.\\The Lead Developer was tasked with the core coding of the automation system. They designed and implemented algorithms that form the backbone of the project, ensuring functionality and efficiency. Additionally, they played a key role in experiment design, collaborating with other team members to develop robust testing protocols that would yield reliable results.\\The Data Scientist focused on data collection, analysis, and visualization. They developed methods for gathering relevant data sets and employed statistical techniques to analyze trends and patterns. Their ability to visualize complex data allowed the team to derive actionable insights, making it easier to communicate findings to stakeholders.\\The Research Specialist was instrumental in generating innovative research ideas and validating experimental approaches. They conducted literature reviews to ensure that experiments were grounded in existing knowledge while also pushing the boundaries of current understanding. Their documentation skills were vital for maintaining a clear record of methodologies, results, and insights gained throughout the project.
+    \item \textbf{Phase 4: Integration, Testing, and Refinement (Estimated: A weeks)}
+    \begin{itemize}
+        \item Integrating all developed modules into a cohesive system.
+        \item Conducting functional testing of the end-to-end pipeline.
+        \item Debugging and resolving issues identified during integration and testing.
+        \item Iteratively refining the model parameters, algorithmic logic, and user interface based on test results.
+    \end{itemize}
 
-\subsection{Computational Resources}
-The computational resources utilized in this project were essential for handling large datasets and performing complex calculations. Google Cloud Platform (GCP) was leveraged extensively, accounting for 70\% of our computational budget. The scalability of cloud services allowed us to efficiently manage workloads without investing heavily in physical infrastructure. GCP provided access to powerful computing resources that facilitated rapid experimentation and deployment.\\High-performance local machines equipped with advanced GPUs were used for development and testing purposes. These machines enabled quick iterations during the coding phase and allowed for intensive computations necessary for training machine learning models. Utilizing local resources helped reduce latency during development cycles.
+    \item \textbf{Phase 5: Finalization and Documentation (Estimated: B weeks)}
+    \begin{itemize}
+        \item Documenting the codebase, system architecture, and functionalities.
+        \item Preparing the project report/thesis, including literature review, methodology, implementation details, results, and conclusions.
+        \item Preparing for final project demonstration and presentation.
+    \end{itemize}
+\end{description}
 
-\subsection{Financial Resources}
-Managing financial resources effectively was critical to maintaining budgetary control throughout the project. A significant portion of our budget (60\%) was allocated to computation expenses, which included costs associated with cloud storage, GPU rentals, and other related services. This investment was essential for ensuring that we had access to the necessary computational power to handle our workloads efficiently.\\The remaining 40\% of our budget was dedicated to tool subscriptions, APIs, development tools, and project management software. These tools facilitated collaboration among team members, streamlined workflows, and enhanced productivity. Investing in high-quality software solutions ensured that our team could focus on innovation rather than administrative tasks.
 
+\section{Resource Allocation}
+The successful execution of this project relied on the allocation and utilization of various resources, categorized as follows:
+
+\begin{itemize}
+    \item \textbf{Hardware Resources:}
+    \begin{itemize}
+        \item \textbf{Development Computer:} A [Your computer type, e.g., personal laptop/desktop] with [CPU details, e.g., Intel Core i7-XXXX], [RAM amount, e.g., 16GB RAM].
+        \item \textbf{GPU:} An NVIDIA [Your GPU model, e.g., GeForce RTX 3060] with CUDA support was utilized for accelerating deep learning model training (YOLO) and inference tasks. If a GPU was not consistently available, CPU-based inference was used, albeit with lower performance.
+        \item \textbf{Webcam:} A [Specify webcam type, e.g., integrated laptop webcam / specific USB webcam model] was used for video input.
+        \item \textbf{Storage:} Local hard drive/SSD storage for the operating system, development tools, codebase, datasets (including the custom book image dataset which was approximately [Specify size if known, e.g., X GB]), and model weights.
+    \end{itemize}
+
+    \item \textbf{Software Resources:}
+    \begin{itemize}
+        \item \textbf{Operating System:} Windows 11
+        \item \textbf{Programming Environment:} Python-3.11, along with VS Code IDE.
+        \item \textbf{Core Libraries:} As detailed in Section 4.1 (Development Environment), key libraries included OpenCV, PyTorch, Ultralytics, L2CS, and NumPy.
+        \item \textbf{Pre-trained Models:}
+            \begin{itemize}
+                \item L2CS model weights (\texttt{L2CSNet\_gaze360.pkl}).
+            \end{itemize}
+        \item \textbf{Dataset Platforms and Annotation Tools:}
+            \begin{itemize}
+                \item Roboflow Universe for sourcing initial book image datasets \cite{Roboflow2024}.
+                \item Roboflow's online tool for annotating the custom book dataset.
+            \end{itemize}
+        \item \textbf{Version Control:} Git and GitHub for codebase management.
+    \end{itemize}
+
+    \item \textbf{Human Resources:}
+    \begin{itemize}
+        \item \textbf{Developer Time:} The primary resource was the time and effort invested by the project developer(s) in research, design, coding, training, testing, and documentation. This amounted to approximately [Specify total hours or person-months if estimated] over the project duration.
+        \item \textbf{Guidance and Supervision:} Input and guidance from academic supervisors or mentors.
+    \end{itemize}
+
+    \item \textbf{Data Resources:}
+    \begin{itemize}
+        \item Publicly available image datasets from Roboflow Universe.
+        \item Self-captured images for the custom book dataset.
+        \item Gaze360 on which the pre-trained L2CS model was originally trained.
+    \end{itemize}
+\end{itemize}
+Effective management and utilization of these resources were crucial for achieving the project's objectives within the defined timeframe.
 
 \section{Challenges Faced}
-During the implementation of this project, several significant challenges emerged that required careful consideration and strategic solutions. One of the most pressing issues was related to computational constraints. Running large-scale experiments, particularly those involving complex machine learning models, proved to be extremely resource-intensive. The team frequently encountered situations where experimental parameters needed to be adjusted to fit within available budget and time constraints, which sometimes compromised the optimal execution of certain experiments. This challenge necessitated the development of sophisticated resource allocation strategies and the implementation of efficient scheduling algorithms to maximize the utilization of available computational resources while maintaining the integrity of research objectives. \\Error handling in automated systems presented another substantial challenge throughout the project lifecycle. The automation pipeline occasionally exhibited unstable behavior, with code execution errors and experimental runs showing unexpected results. These issues were particularly difficult to diagnose and resolve, often requiring extensive debugging sessions that consumed significant development time. The complexity of the automated systems meant that errors could propagate through multiple stages of the research process, making isolation and resolution of issues particularly challenging. This experience led to the implementation of more robust error handling mechanisms and the development of comprehensive testing protocols to ensure system stability and reliability.\\The limitations of novelty detection emerged as a third major challenge in our implementation. Despite implementing sophisticated algorithms for checking the uniqueness of research ideas, the system occasionally failed to identify redundant or previously explored concepts. This shortcoming highlighted the complexity of automated research validation and the challenges inherent in programmatically assessing the originality of scientific ideas. To address this issue, we continuously refined our novelty detection algorithms, incorporating additional parameters and metrics to improve accuracy. The experience emphasized the importance of maintaining a balance between automated assessment and human oversight in the research validation process, leading to the development of a hybrid approach that combined computational analysis with expert review for optimal results.
+Several challenges were encountered during the development lifecycle of the Book Reading Attention Monitoring system. Overcoming these hurdles was integral to the project's progress:
+
+\begin{itemize}
+    \item \textbf{Dataset Curation for Book Detection:}
+    Creating a robust and diverse dataset for training the custom YOLOv12s book detector was a significant undertaking.
+    \begin{itemize}
+        \item \textit{Challenge:} Sourcing a sufficient quantity of varied images representing different book types, sizes, cover designs, open/closed states, and various real-world reading environments (lighting, backgrounds, occlusions) was time-consuming.
+        \item \textit{Mitigation/Approach:} This was addressed by combining images from public repositories like Roboflow Universe with a dedicated effort to capture and annotate a substantial number of custom images. Data augmentation techniques were also planned/employed to increase dataset variability.
+    \end{itemize}
+
+    \item \textbf{Accuracy and Robustness of AI Models in Real-World Conditions:}
+    \begin{itemize}
+        \item \textit{Challenge (Gaze Estimation):} The L2CS gaze estimator, while powerful, could sometimes yield less accurate results under challenging lighting conditions, with certain types of eyewear, or with extreme head poses. Ensuring consistent performance across diverse users and environments was difficult.
+        \item \textit{Challenge (Book Detection):} The custom YOLO model's accuracy was sensitive to how well its training data represented the actual use-case scenarios. Occluded books, unusual book appearances, or cluttered backgrounds sometimes led to missed detections or misclassifications.
+        \item \textit{Mitigation/Approach:} Iterative testing in various conditions helped identify weaknesses. For book detection, continuous refinement of the training dataset and data augmentation were key strategies. For gaze, understanding the model's limitations and designing the system for typical reading postures helped.
+    \end{itemize}
+
+    \item \textbf{Integration of Multiple AI Models and Real-Time Performance:}
+    \begin{itemize}
+        \item \textit{Challenge:} Running both the L2CS gaze estimation and the YOLO object detection models simultaneously on a live video stream, while also executing the attention analysis logic, posed a computational challenge, especially on systems without high-end GPUs. Achieving a smooth frame rate and low latency for real-time feedback was a key concern.
+        \item \textit{Mitigation/Approach:} The choice of YOLOv12s (a smaller variant) was aimed at balancing accuracy and speed. Code optimization, efficient data handling between modules, and leveraging GPU acceleration where available were important. Threading (as suggested by the use of \texttt{Queue}) was likely explored to decouple frame processing from the main application thread.
+    \end{itemize}
+
+    \item \textbf{Defining and Implementing the Gaze-Book Intersection Logic:}
+    \begin{itemize}
+        \item \textit{Challenge:} Translating the 2D gaze direction and 2D book bounding box into a meaningful 3D interaction to infer attention required careful geometric reasoning. Determining appropriate thresholds and parameters (like \texttt{z\_near}, \texttt{z\_far} for the book's assumed depth) for the ray-box intersection test was non-trivial and required experimentation.
+        \item \textit{Mitigation/Approach:} The ray-casting approach was developed and refined through testing. Visualizing the gaze vector and book boxes helped in debugging this logic.
+    \end{itemize}
+
+    \item \textbf{Nuances of "Attention" Assessment:}
+    \begin{itemize}
+        \item \textit{Challenge:} As discussed in limitations, visually inferred attention is not a perfect proxy for cognitive engagement. The system might flag a user as "distracted" for briefly looking away to think, or "attentive" when they are merely staring blankly at an open book. Designing logic to handle such nuances robustly is inherently complex.
+        \item \textit{Mitigation/Approach:} The system focused on clear cases of looking at or away from the book. Acknowledging this as a limitation and focusing on providing a general indicator was the pragmatic approach for this project's scope.
+    \end{itemize}
+
+    \item \textbf{Development Tooling and Dependencies:}
+    \begin{itemize}
+        \item \textit{Challenge:} Ensuring compatibility between different library versions (PyTorch, OpenCV, Ultralytics, L2CS dependencies) and setting up the correct CUDA environment (if using GPU) can sometimes present configuration challenges.
+        \item \textit{Mitigation/Approach:} Careful management of the Python environment (e.g., using virtual environments) and referring to the official documentation for each library helped resolve these issues. The \texttt{requirements.txt} file aimed to standardize the environment.
+    \end{itemize}
+\end{itemize}
+Addressing these challenges involved a combination of research, iterative experimentation, dataset refinement, and careful software engineering.
+
+\section{Success Factors}
+Several factors contributed, or would contribute, to the successful development and functionality of the Book Reading Attention Monitoring system:
+
+\begin{itemize}
+    \item \textbf{Modular Design:} Structuring the project into distinct modules (\texttt{CameraManager}, \texttt{GazeEstimator}, \texttt{BookDetector}, \texttt{AttentionMonitor}, \texttt{SessionManager}) allowed for independent development, testing, and debugging of each component before integration. This simplified the overall complexity.
+    \item \textbf{Leveraging State-of-the-Art Pre-trained Models:} Using a robust pre-trained model like L2CS for gaze estimation provided a strong foundation for that component, saving significant effort compared to training a gaze model from scratch.
+    \item \textbf{Customization of YOLO for Specific Task:} The ability to custom-train a YOLOv12s model specifically for "open\_book" and "closed\_book" detection tailored the object detection to the project's unique requirements, leading to better contextual understanding than a generic object detector might provide.
+    \item \textbf{Iterative Development and Testing:} The approach of building, testing, and refining components and their integration iteratively allowed for early identification and correction of issues, leading to a more robust system.
+    \item \textbf{Availability of Powerful Open-Source Libraries:} The rich ecosystem of Python libraries for computer vision (OpenCV), deep learning (PyTorch), and object detection frameworks (Ultralytics) greatly accelerated development and provided access to efficient implementations of complex algorithms.
+    \item \textbf{Clear Problem Definition and Scope:} Having well-defined objectives and a clear scope for a proof-of-concept system helped maintain focus on core functionalities.
+    \item \textbf{Systematic Data Collection and Annotation:} The dedicated effort to create and annotate a custom dataset for book detection, including sourcing data and capturing new images, was crucial for the performance of that specific module.
+    \item \textbf{Focus on Local Processing for Privacy:} The design decision to perform all processing locally on the user's machine addressed key privacy concerns from the outset, making the system more acceptable.
+\end{itemize}
+These factors collectively created an environment conducive to achieving the project's primary goals.
 
 \section{Lessons Learned}
+The process of developing the Book Reading Attention Monitoring system provided several valuable insights and learning experiences:
+
 \begin{itemize}
-    \item \textbf{Flexibility:} Flexibility in adapting to unexpected challenges, such as hardware limitations or unanticipated errors in the system, proved to be crucial in maintaining progress.
-
-    \item \textbf{Continuous Improvement:} Each stage of the system design required constant iteration as opportunities to refine the process continued to emerge.
-
-    \item \textbf{Data Quality Matters:} Quality, diverse data sets are critical for the creation of valid and reproducible results.
-
-    \item \textbf{Ethical Oversight:} All automatic systems designed and implemented into research should be based upon ethical considerations, especially against bias, transparency, and data privacy.
+    \item \textbf{The Critical Role of Data Quality and Quantity:} The performance of the custom YOLO model was directly tied to the quality, diversity, and size of the training dataset. Learned the importance of meticulous data collection, annotation, and augmentation strategies for developing robust machine learning models for specific tasks.
+    \item \textbf{Complexity of Real-World AI Application:} Integrating multiple AI models (gaze, object detection) and making them work cohesively in a real-time application is significantly more complex than running individual models in isolation. Issues like synchronization, data flow management, and computational resource balancing become paramount.
+    \item \textbf{Challenges in Defining and Measuring "Attention":} "Attention" is a multifaceted cognitive concept. Learned that translating it into measurable visual cues and algorithmic logic involves making simplifications and assumptions. Visual attention is a useful proxy but doesn't capture the full picture of cognitive engagement.
+    \item \textbf{Importance of Iterative Development and Prototyping:} For AI-driven projects where model behavior can be unpredictable in novel scenarios, an iterative approach with frequent testing and refinement is crucial. Early prototyping helps in identifying challenges and validating design choices.
+    \item \textbf{Performance Trade-offs in Real-Time Systems:} Learned about the inherent trade-offs between model accuracy, complexity, and real-time processing speed, especially when targeting deployment on consumer-grade hardware. Choices like using a smaller YOLO variant (YOLOv12s) reflect this compromise.
+    \item \textbf{Value of Modular Programming:} The modular design greatly aided in managing complexity. Being able to develop and test components like the \texttt{GazeEstimator} or \texttt{BookDetector} independently before integrating them proved highly effective.
+    \item \textbf{Debugging Challenges in Vision Systems:} Debugging systems that process visual data can be challenging. Visualizing intermediate outputs (e.g., detected faces, gaze vectors, book bounding boxes) at each stage of the pipeline was essential for identifying and resolving issues.
+    \item \textbf{Understanding Limitations of Pre-trained Models:} While pre-trained models like L2CS are powerful, they have their own inherent limitations and may not perform perfectly in every unique condition or for every user. Understanding these limitations is key to setting realistic expectations.
+    \item \textbf{Ethical Implications of Monitoring Technologies:} Gained a deeper appreciation for the ethical considerations (privacy, consent, potential misuse) that must be addressed when developing AI systems that monitor human behavior, even with benign intent.
 \end{itemize}
+These lessons contribute to a broader understanding of applied AI project development and will be valuable for future endeavors in this field.

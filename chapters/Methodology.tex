@@ -3,167 +3,491 @@
 \hspace{-1cm}\rule{19cm}{0.4pt} 
 
 \section{Project Overview}
-This project aims to create an automated system that can generate, test, and document scientific ideas with minimal human intervention on repetitive research tasks, without compromising rigor and quality. The methodology covers the whole pipeline of research, which has been divided into five major stages: idea generation, experimental design, data collection, analysis, and documentation.\\
-It first creates the potential research ideas with input parameters or a predefined starting template, then it evaluates those ideas as to whether they are new and feasible using external sources such as academic databases, after which it designs the experiments for testing the remaining concepts. It does this through the development of a complete experimental setup that provides all the details on the method by which data will be gathered and analyzed.
+This project, titled "Book Reading Attention Monitoring," is designed to ascertain a user's level of visual attention while they are engaged in reading a physical book. The system leverages computer vision and deep learning techniques to process a live video feed from a standard webcam, analyzing visual cues such as eye gaze direction and the presence and state of a book to make an inference about the user's focus. The ultimate aim is to provide a foundation for a tool that could offer real-time feedback to users, helping them understand and potentially improve their reading attention patterns.
 
-\vspace{1cm}
+The system operates through a sequence of interconnected modules, each responsible for a specific task in the attention monitoring pipeline. The overall architecture is depicted in Figure~\ref{fig:system_architecture_overview} and described subsequently. (I will provide the TikZ code for this figure after this text block).
 
-\begin{figure}[h]
-    \centering
-    \begin{tikzpicture}[node distance=2cm]
-        % Nodes
-        \node (userInput) [entity] {User Input};
-        \node (process) [process, right of=userInput, xshift=8cm] {Automated Research Workflow};
-        \node (output) [data, below of=process, yshift=-3cm, xshift=-4cm] {Research Paper};
-        
-        % Arrows
-        \draw [arrow] (userInput) -- (process) node[midway, above] {Template + Arguments};
-        \draw [arrow] (process) -- (output) node[midway, right] {Final Document}; 
-    \end{tikzpicture}
-    \caption{ High-level overview of the research generation workflow.}
-    \label{fig:level1} % chktex 24
+The core workflow begins with capturing video input from the user's webcam. Each frame from this video stream is then processed by two primary analysis components:
+\begin{enumerate}
+    \item \textbf{Gaze Estimation:} A dedicated module, utilizing the L2CS (Look-Likely-to-See) deep learning model \cite{L2CSNet2022}, processes the video frame to detect the user's face and estimate the direction of their eye gaze. This results in pitch and yaw values representing the gaze orientation, along with the bounding box of the detected face.
+    \item \textbf{Book Detection and Attention Analysis:} Concurrently, the video frame, along with the derived gaze information, is fed into an attention monitoring module. This module internally employs a custom-trained YOLOv12s (You Only Look Once) object detection model \cite{Redmon_YOLO_2016} to locate any books within the frame and determine their state (i.e., "open\_book" or "closed\_book").
+\end{enumerate}
+
+The attention monitoring module then integrates these two streams of information. It calculates a 3D gaze vector based on the estimated pitch and yaw, originating from the center of the detected face. A key part of its logic involves performing a ray-box intersection test: it determines if this calculated 3D gaze vector intersects with the 3D bounding volume conceptually formed by a detected "open\_book."
+
+Based on the outcome of this intersection test, along with the presence of a detected face and an open book, the system makes a frame-by-frame assessment of whether the user is attentive to the reading material. This attention status (e.g., "Attentive," "Distracted," "Book not found," "Face not found") is then made available.
+
+The entire process is orchestrated by a session manager component, which handles frame acquisition, coordinates the analysis modules, and manages the display of the processed video feed to the user. The visual output includes the original camera feed augmented with overlays indicating detected faces, book bounding boxes, gaze direction cues, and the current inferred attention status. This provides immediate, albeit qualitative, feedback to the user.
+
+The following sections in this chapter will delve deeper into the specific research design, data collection methods (particularly for the custom book dataset), the detailed data analysis techniques including the gaze-book intersection logic, and any ethical considerations and methodological limitations.
+
+
+\vspace{0.5cm}
+\begin{figure}[h!]
+\centering
+% \resizebox{\textwidth}{!}{% % Uncomment and adjust if necessary for scaling
+\begin{tikzpicture}[
+    node distance=1.8cm and 1.2cm, % Adjusted for compactness
+    block/.style={rectangle, draw, fill=blue!20, text width=9em, text centered, minimum height=3.5em, rounded corners, font=\small},
+    sub_block/.style={rectangle, draw, fill=cyan!20, text width=8em, text centered, minimum height=3em, rounded corners, font=\small},
+    model/.style={rectangle, draw, fill=green!20, text width=7em, text centered, minimum height=2.5em, rounded corners=3pt, font=\small},
+    logic/.style={rectangle, draw, fill=orange!20, text width=9em, text centered, minimum height=3em, rounded corners, font=\small},
+    io/.style={trapezium, trapezium left angle=70, trapezium right angle=110, draw, fill=gray!30, minimum height=3em, text centered, text width=7em, font=\small},
+    data/.style={ellipse, draw, fill=yellow!20, minimum height=2.5em, text centered, text width=8em, font=\small},
+    arrow/.style={-Stealth, thick},
+    small_model/.style={rectangle, draw, fill=green!30, text width=6em, text centered, minimum height=2em, font=\scriptsize, rounded corners=2pt}
+]
+
+% Nodes
+\node[io] (webcam) {Webcam};
+\node[block, right=1cm of webcam] (cam_manager) {Camera Manager};
+\node[data, below=0.8cm of cam_manager] (frame) {Video Frame};
+
+\node[block, below=1.2cm of frame, xshift= (-3cm)] (session_manager) {Session Manager};
+
+\node[sub_block, below left=0.1cm and 1.5cm of session_manager] (gaze_estimator) {Gaze Estimator};
+\node[model, below=0.5cm of gaze_estimator] (l2cs_model) {(L2CS Model)};
+\node[data, above=1.5cm of gaze_estimator] (gaze_data) {Gaze Data (Pitch, Yaw, Face BBox)};
+
+\node[sub_block, below right=0.1cm and 1cm of session_manager] (book_detector_sm) {Book Detector (Session)}; % SessionManager's instance
+\node[model, below=0.5cm  of book_detector_sm, xshift=1cm] (yolo_model_sm) {(YOLOv12s)};
+\node[data, above=1cm of book_detector_sm] (book_detections_sm) {Initial Book Detections};
+
+\node[logic, below=4cm  of session_manager, xshift=0.5cm] (attention_monitor) {Attention Monitor}; % Main analytical block
+% \node[small_model, below=0.2cm of attention_monitor] (yolo_internal_am) {(Internal YOLO for Analysis)};
+
+\node[data, right=0.4cm of attention_monitor] (attention_status) {Attention Status};
+\node[io, below left=4cm and 2cm of session_manager] (display) {User Interface (Display)};
+
+% Edges - Data Flow
+\draw[arrow] (webcam) -- (cam_manager);
+\draw[arrow] (cam_manager) -- (frame);
+
+% Session Manager gets frame and uses its components
+\draw[arrow] (frame) -- (session_manager.north); % Frame to Session Manager
+
+% Session Manager uses Gaze Estimator
+\draw[arrow] (session_manager.west) .. controls +(0:-0.4cm) and +(0:1cm) .. node[midway, above, sloped, scale=0.7] {uses frame} (gaze_estimator.east);
+\draw[arrow] (l2cs_model) -- (gaze_estimator);
+\draw[arrow] (gaze_estimator) -- (gaze_data);
+\draw[arrow] (gaze_data) -- (session_manager.west); % Gaze data back to Session Manager
+
+% Session Manager uses its Book Detector
+\draw[arrow] (session_manager.east) .. controls +(0:0.4cm) and +(0:-1cm) .. node[midway, above, sloped, scale=0.7] {uses frame} (book_detector_sm.west);
+\draw[arrow] (book_detector_sm) -- (book_detections_sm);
+\draw[arrow] (yolo_model_sm) -- (book_detector_sm);
+\draw[arrow] (book_detections_sm) -- (session_manager.east); % Initial Book Detections back to Session Manager
+
+% Session Manager provides necessary inputs to Attention Monitor
+% Frame (for internal YOLO) and Gaze Data are critical for AttentionMonitor's logic
+\draw[arrow] (session_manager.south) .. controls +(0:0cm) and +(0:0cm) .. node[midway, above, sloped, scale=0.7] {Frame + Gaze Data} (attention_monitor.north);
+% The `book_detections_sm` are conceptually part of what SM prepares for AM,
+% even if AM re-detects for its core logic.
+
+\draw[arrow] (attention_monitor) -- (attention_status);
+\draw[arrow] (attention_status) -- (session_manager.south); % Attention Status back to Session Manager
+
+% Session Manager updates Display
+\draw[arrow] (session_manager) -- (display);
+
+\end{tikzpicture}
+% } % End of \resizebox
+\caption{System Architecture Overview of the Book Reading Attention Monitor (Corrected Flow).}
+\label{fig:system_architecture_overview_corrected}
 \end{figure}
-
-The experiments are therefore designed, conducted, and their data collected in an organized and systematic manner. At this level, the most important goal is to achieve reliable as well as relevant results against the hypotheses proposed. Consequently, the obtained data is analysed by using relevant statistical means and the outcomes are therefore presented in a structured reporting format that abides by conventional standards of professional academic work. This documentation includes interpretations of the findings, discussions on their implications, and suggestions for future research. To measure the success of the project, a combination of quantitative metrics, such as novelty scores and reproducibility rates, and qualitative reviews will be used. This includes simulated peer reviews, providing an understanding of how well the automated system produces valuable research outputs and whether it complies with scientific standards. \\
-The project will be initially tested within a computational domain to ensure practicality and effectiveness. Following this phase, the system's adaptability for broader fields of research will be evaluated, assessing its potential application in various scientific disciplines beyond its original scope.
-
-\begin{figure}[htbp]
-    \centering
-    \begin{tikzpicture}[node distance=2cm]
-        % Nodes
-        \node (template) [entity] {Template Folder};
-        \node (cmd) [entity, below of=template, yshift=-1cm] {User Commands};
-        \node (ideaGen) [process, right of=template, xshift=4cm] {Idea Generation};
-        \node (noveltyCheck) [process, right of=ideaGen, xshift=4cm] {Novelty Checking};
-        \node (experiments) [process, below of=noveltyCheck, yshift=-2cm] {Perform Experiment};
-        \node (logs) [data, below of=experiments, yshift=-3cm] {Logs + Notes};
-        \node (writeup) [process, left of=logs, xshift=-4cm] {Paper Writeup};
-        \node (output) [data, left of=writeup, xshift=-4cm] {PDF Output};
-         
-        % Arrows 
-        \draw [arrow] (template) -- (ideaGen) node[midway, above] {Template};
-        \draw [arrow] (cmd) -- (ideaGen) node[midway, right] {Arguments};
-        \draw [arrow] (ideaGen) -- (noveltyCheck) node[midway, above] {Seed Ideas};
-        \draw [arrow] (noveltyCheck) -- (experiments) node[midway, left] {Novel Ideas};
-        \draw [arrow] (experiments) -- (logs) node[midway, left] {Experiment Results};
-        \draw [arrow] (logs) -- (writeup) node[midway, above] {Notes};
-        \draw [arrow] (writeup) -- (output) node[midway, above] {LaTeX PDF};
-    \end{tikzpicture}
-    \caption{Main modules of the automated research generation system.}
-    \label{fig:level2} % chktex 24
-\end{figure}
-
-
-\begin{figure}[ht]
-    \centering
-    \begin{tikzpicture}[node distance=2cm]
-        % Nodes
-        \node (start) [entity] {User Starts};
-        \node (seed) [process, right of=start, xshift=4cm] {Seed Ideas};
-        \node (genIdeas) [process, right of=seed, xshift=4cm] {Generate New Ideas};
-        \node (novelty) [process, below of=genIdeas, yshift=-3cm] {Check Novelty};
-        \node (experiments) [process, left of=novelty, xshift=-4cm, ] {Run Experiments};
-        \node (logs) [data, left of=experiments, xshift=-4cm] {Generate Logs};
-        \node (writeup) [process, below of=logs, yshift=-2cm] {Generate Writeup};
-        \node (output) [data, right of=writeup, xshift=4cm] {Final PDF};
-        \node (review) [process, right of=output, xshift=3cm] {Review Papers};
-        \node (genreview) [data, below of=review, yshift=-4cm] {Reviews Generated};
- 
-        % Arrows 
-        \draw [arrow] (start) -- (seed);
-        \draw [arrow] (seed) -- (genIdeas) node[midway, above] {Ideas};
-        \draw [arrow] (genIdeas) -- (novelty) node[midway, right] {New Ideas};
-        \draw [arrow] (novelty) -- (experiments) node[midway, above] {Novel Ideas};
-        \draw [arrow] (experiments) -- (logs) node[midway, above] {Results};
-        \draw [arrow] (logs) -- (writeup) node[midway, right] {Notes};
-        \draw [arrow] (writeup) -- (output) node[midway, above] {Draft Paper};
-        \draw [arrow] (output) -- (review) node[midway, above] {Paper};
-        \draw [arrow] (review) -- (genreview) ;
-    \end{tikzpicture}
-    \caption{ Detailed system processes for automated research generation.}
-    \label{fig:level3} % chktex 24  
-\end{figure}
-
 
 \section{Research Design and Approach}
-The research design for this project is set as an iterative, modular process with feedback loops to enable continuous improvement. The dominant approach follows a number of key stages that are important to the overall functionality of the automated system.\\
-The first stage focuses on idea generation through two main components. Through computational models, the system creates a diverse set of hypotheses or research questions. This is done through randomization and guided generation based on existing knowledge within a scope. Tools such as semantic search APIs are integrated to assess the novelty of ideas generated, ensuring that the ideas are novel and do not duplicate work already done.\\
-The experimental design stage involves converting hypotheses into testable forms. Every formed hypothesis is turned into a testable hypothesis and then used for designing experiments according to specific domain needs. Code template libraries are modified so the system can dynamically change experiment designs in response to user feedback from preliminary testing rounds. This improves versatility and reactivity.\\
-For data gathering, the system implements experiments by conducting them on preselected sets or simulated scenarios to generate measurable data. Multiples of the experiments are run using automation to establish robustness and reliability of the results.\\
-The analysis and documentation phase involves two key components. Results are analyzed through statistical tools or machine learning pre-programmed to help determine the patterns and insights that come out. The findings are then presented in an academic manner using visualizations and structured text according to professional research reporting standards.\\
-Finally, the evaluation stage incorporates an automated review mechanism that evaluates the clarity, originality, and potential impact of the documented work, simulating a peer-review process. This provides valuable feedback on the quality of the research outputs.
+The development of the Book Reading Attention Monitoring system was guided by an applied research and iterative development methodology. The primary goal was to engineer a functional prototype that integrates existing advanced AI models for a novel application: monitoring reader attention on physical books using standard webcam hardware. The approach can be characterized by several key phases, as illustrated in Figure~\ref{fig:research_approach_diagram} and detailed below.
 
+\begin{figure}[h!]
+\centering
+\resizebox{0.9\textwidth}{!}{%
+\begin{tikzpicture}[
+    node distance=1.5cm and 0.5cm, % Adjusted distances
+    phase/.style={rectangle, draw, fill=blue!20, text width=11em, text centered, minimum height=3.5em, rounded corners},
+    subphase/.style={rectangle, draw, fill=green!15, text width=10em, text centered, minimum height=3em, rounded corners=2pt, font=\small},
+    arrow/.style={-Stealth, thick},
+    fitnode/.style={draw, rounded corners, inner sep=0.4cm, dashed, fill=gray!5}
+]
+
+% Phases
+\node[phase] (p1) {1. Conceptualization \& Literature Review};
+\node[phase, right=2cm of p1] (p2) {2. System Design \& Model Selection};
+\node[phase, below=of p2] (p3) {3. Core Component Development};
+\node[phase, left=2cm of p3] (p4) {4. Integration \& System Assembly};
+\node[phase, below=of p4] (p5) {5. Testing \& Iterative Refinement};
+
+% Arrows between main phases
+\draw[arrow] (p1) -- (p2);
+\draw[arrow] (p2) -- (p3);
+\draw[arrow] (p3) -- (p4);
+\draw[arrow] (p4) -- (p5);
+\draw[arrow, rounded corners] (p5.east) -| ++(8cm,0) |- (p3.east); % Iterative loop back to development
+
+% Sub-components within Phase 3 (Core Component Development)
+\node[subphase, below right=5cm and -2.5cm of p3.west] (c_gaze) {Gaze Estimation Module (L2CS)};
+\node[subphase, right=0.5cm of c_gaze] (c_book) {Book Detection Module (Custom YOLO)};
+\node[subphase, right=0.5cm of c_book] (c_attention) {Attention Analysis Module};
+
+% Invisible nodes for fitting Phase 3 content
+\coordinate (p3_top_left) at ([xshift=-3cm,yshift=0.5cm]p3.north west);
+\coordinate (p3_bottom_right) at ([xshift=3cm,yshift=-3cm]p3.south east); % Adjusted yshift for subphases
+
+
+\draw[arrow, dotted] (p3.south) -- (c_gaze.north);
+\draw[arrow, dotted] (p3.south) -- (c_book.north);
+\draw[arrow, dotted] (p3.south) -- (c_attention.north);
+
+
+\end{tikzpicture}%
+}
+\caption{Iterative Research and Development Approach.}
+\label{fig:research_approach_diagram}
+\end{figure}
+
+\begin{enumerate}
+    \item \textbf{Conceptualization and Requirements Definition:}
+    The initial phase involved defining the problem: the challenge of maintaining attention during reading and the potential for an AI-based solution. This included outlining the primary objectives (enhancing focus, tracking patterns, promoting better habits), identifying key functionalities (gaze tracking, book detection, attention inference), and defining the overall scope of the system targeting users reading physical books.
+
+    \item \textbf{Literature Review and Technology Assessment:}
+    A thorough review of existing literature was conducted (as detailed in Chapter 2) to understand the state-of-the-art in relevant areas:
+    \begin{itemize}
+        \item \textit{Gaze Estimation:} Exploring various techniques, with a focus on appearance-based deep learning models suitable for webcam input, leading to the selection of the L2CS model \cite{L2CSNet2022} for its reported accuracy in unconstrained environments.
+        \item \textit{Object Detection:} Investigating real-time object detection frameworks, particularly the YOLO family \cite{Redmon_YOLO_2016, Jocher_YOLOv5_2020, ultralytics_yolov8_2023}, for their efficiency and the ability to be custom-trained. This informed the decision to use a YOLO-based architecture (YOLOv12s) for book detection.
+        \item \textit{Attention Monitoring:} Reviewing approaches for inferring attention from visual cues, including studies on reader engagement and multimodal systems.
+    \end{itemize}
+    This phase was crucial for selecting appropriate technologies and understanding existing methodologies.
+
+    \item \textbf{System Design and Architecture Planning:}
+    Based on the requirements and technology assessment, a modular system architecture was designed (as presented in Section 3.1 Project Overview). This involved defining the primary components: Camera Manager, Gaze Estimator, Book Detector, Attention Monitor, and Session Manager, and outlining their interactions and data flow. The design prioritized local processing to ensure user privacy and real-time (or near real-time) performance.
+
+    \item \textbf{Core Component Development and Implementation:}
+    This phase focused on the practical implementation of the key modules:
+    \begin{itemize}
+        \item \textit{Gaze Estimation Module:} Integration of the pre-trained L2CS model to process video frames and output pitch/yaw gaze angles and face bounding boxes.
+        \item \textit{Book Detection Module:} This involved a significant sub-task of creating a custom dataset of images featuring open and closed books in various settings. This dataset was then used to train a YOLOv12s model to specifically detect "open\_book" and "closed\_book" classes.
+        \item \textit{Attention Analysis Module:} Development of the logic to fuse information from the gaze and book detection modules. The core of this module is the algorithm for calculating the 3D gaze vector and implementing the ray-box intersection test to determine if the user's gaze is directed at an open book.
+        \item \textit{Supporting Modules:} Implementation of the `CameraManager` for handling video input and the `SessionManager` for orchestrating the overall application flow and user display.
+    \end{itemize}
+
+    \item \textbf{Integration and System Assembly:}
+    The individual modules were then integrated into a cohesive application. This involved managing data pipelines between components, ensuring synchronization, and handling potential errors or edge cases (e.g., face not detected, book not found).
+
+    \item \textbf{Testing and Iterative Refinement:}
+    The system underwent functional testing throughout its development. This included:
+    \begin{itemize}
+        \item Testing the accuracy and robustness of the gaze estimator under various conditions.
+        \item Evaluating the performance of the custom-trained book detector on a validation set and in real-world scenarios.
+        \item Verifying the logic of the attention analysis module, particularly the gaze-book intersection.
+        \item Observing the real-time performance and responsiveness of the integrated system.
+    \end{itemize}
+    Although a formal quantitative evaluation with human subjects was beyond the immediate scope of this phase, the testing was iterative, with observations and identified issues feeding back into the development and refinement of the components. The design approach was flexible to accommodate adjustments based on these tests.
+\end{enumerate}
+
+The overall approach was thus empirical and constructive, focused on building a working system by applying and integrating established AI techniques to a specific real-world problem. The emphasis was on demonstrating the feasibility of the proposed solution and creating a platform that could be further developed and rigorously evaluated in future work.
 
 \section{Data Collection Methods}
-Data collection in this project is fully automated, utilizing a combination of pre-existing datasets, simulated environments, and self-generated experimental results. The process implements multiple sophisticated methods to ensure comprehensive and reliable data gathering across various research scenarios.\\
-The foundation of our data collection strategy lies in the integration of predefined datasets. The system carefully identifies and incorporates datasets that are most relevant to the research domain being investigated. These datasets may come from public repositories, academic databases, or be generated internally by the system depending on the specific requirements of the project. This approach ensures that the research begins with a solid foundation of reliable data, which can be used for both initial analysis and as a benchmark for comparing new results.\\
-Simulated experiments form another crucial component of our data collection methodology. In scenarios where real-world data collection is impractical, costly, or simply impossible, the system employs sophisticated simulation environments. These simulated environments are carefully designed to mirror real-world conditions while offering the flexibility to manipulate variables in ways that might not be possible in actual settings. This approach allows for extensive experimentation without the limitations and constraints typically associated with real-world data collection, enabling the exploration of various scenarios and hypotheses in a controlled environment.\\
-The system implements comprehensive real-time data logging throughout all experimental processes. Every aspect of the experiments, including intermediate results, error messages, performance metrics, and system states, is meticulously recorded. These detailed logs serve multiple purposes: they provide a complete audit trail of the experimental process, enable thorough analysis of the results, and facilitate the reproduction of experiments when needed. The logging system is designed to capture both successful outcomes and failures, as both types of results can provide valuable insights for the research process.\\
-Dynamic data collection capabilities represent the most advanced aspect of our methodology. The system is engineered to adaptively modify experimental parameters during runtime, responding to intermediate results and changing conditions. This dynamic approach allows for the collection of data across a broad spectrum of experimental conditions, ensuring that the research captures a comprehensive view of the phenomenon being studied. The system can automatically adjust variables, measurement frequencies, and other parameters based on preliminary results, optimizing the data collection process for maximum insight and efficiency.
+The successful development of the AI components within this project, particularly the custom book detection model, necessitated a systematic approach to data collection. While the gaze estimation module utilizes a pre-trained L2CS model \cite{L2CSNet2022}, which was developed and validated on existing large-scale gaze datasets, the book detection module required the creation of a specialized dataset tailored to the project's needs.
 
-\section{Project Directory}
-\subsection{Structure}
-\begin{lstlisting}
-.env
-example_papers/
-ai_scientist/
-    generate_ideas.py
-    llm.py
-    perform_experiments.py
-    perform_writeup.py
-    perform_review.py
-data/
-launch_scientist.py
-results/
-templates/
-LICENSE
-README.md
-requirements.txt
-\end{lstlisting}
+\subsection{Gaze Estimation Data}
+For the L2CS gaze estimation model, this project leveraged the publicly available pre-trained weights. These weights were derived from training on extensive datasets containing a wide variety of face images with corresponding ground-truth gaze direction annotations (e.g., pitch and yaw). The use of such a pre-trained model significantly reduced the development effort that would otherwise be required for collecting and annotating a large-scale gaze dataset from scratch, allowing the project to focus on the integration and application of this technology. The L2CS model's training on diverse datasets like Gaze360 contributes to its robustness in unconstrained environments.
 
-\subsection{Explanation of Structure}
+\subsection{Book Detection Dataset (Custom YOLOv12s Model)}
+A critical aspect of this project was the development of a custom object detector capable of accurately identifying physical books and their state (open or closed). This required the collection and annotation of a specific image dataset for training the YOLOv12s model. The data collection process for this purpose involved two primary strategies:
+
+\begin{enumerate}
+    \item \textbf{Leveraging Publicly Available Datasets via Roboflow Universe:}
+    To establish a foundational dataset, an initial set of images containing books was sourced from Roboflow Universe \cite{Roboflow2024}. Roboflow Universe is a public repository of computer vision datasets, offering a diverse range of images and annotations across various domains. Relevant datasets featuring books in different contexts were explored, and suitable images were selected to bootstrap the training process. This approach provided an immediate collection of varied images, saving considerable initial data gathering time.
+
+    \item \textbf{Self-Captured Supplementary Data Collection:}
+    Recognizing that publicly available datasets might not fully cover the specific nuances and variations anticipated in the project's target usage scenarios (e.g., different book types, lighting conditions in typical reading environments, various angles, open/closed states), the initial dataset was augmented with self-captured images. This supplementary data collection was performed manually and aimed to:
+    \begin{itemize}
+        \item \textbf{Increase Diversity:} Images were captured of various types of books (hardcover, paperback, different sizes, varied cover designs), in different states (fully open, partially open, closed), and from multiple perspectives and distances relative to the camera.
+        \item \textbf{Simulate Real-World Conditions:} Efforts were made to capture images under a range of lighting conditions (natural light, artificial indoor light, mixed lighting) and against different backgrounds typically found in study or reading environments.
+        \item \textbf{Address Potential Edge Cases:} Specific scenarios, such as books held in hands, lying flat on a table, or propped up, were included to improve the model's robustness.
+    \end{itemize}
+    These self-captured images were taken using standard smartphone cameras and webcams to reflect the input quality expected by the final system.
+\end{enumerate}
+
+\subsection{Data Annotation and Preparation}
+All images in the custom book detection dataset, whether sourced from Roboflow Universe or self-captured, underwent a meticulous annotation process.
+\begin{itemize}
+    \item \textbf{Annotation Classes:} Two primary classes were defined for annotation: "open\_book" and "closed\_book." These classes are essential for the system to distinguish whether a detected book is in a state relevant for active reading.
+    \item \textbf{Bounding Box Annotation:} For each instance of a book in an image, a tight bounding box was drawn to precisely delineate its location. This is standard practice for training YOLO-based object detectors.
+    \item \textbf{Annotation Tools:} The annotation process have utilized tools such as Roboflow's integrated annotation platform. This tools facilitate the accurate drawing of bounding boxes and assignment of class labels.
+    \item \textbf{Dataset Split:} Following standard machine learning practice, the final aggregated dataset was partitioned into training, validation, and testing sets. This division is crucial for training the model, tuning its hyperparameters, and evaluating its performance on unseen data to ensure generalization. (You would ideally specify the approximate number of images and the split ratio here, e.g., "The final dataset comprised approximately XXXX images, split into 70\% for training, 15\% for validation, and 15\% for testing.")
+    \item \textbf{Data Augmentation:} To further enhance the dataset's size and variability, and to improve the model's robustness against minor changes in input, data augmentation techniques were likely applied. Common augmentations for object detection tasks include geometric transformations (e.g., rotation, scaling, flipping) and photometric distortions (e.g., changes in brightness, contrast, saturation). Platforms like Roboflow often provide built-in augmentation capabilities that can be applied during the dataset versioning process.
+\end{itemize}
+
+The careful collection, annotation, and preparation of this custom book detection dataset were vital steps in developing a YOLOv12s model capable of reliably identifying books and their states, which is a cornerstone of the attention monitoring logic.
+
+\section{Directory Structure}
+The project is organized into a structured hierarchy of directories and files to ensure modularity, maintainability, and ease of navigation. The main components of the project are located within a root folder, conventionally named \texttt{book-attention-monitor/}. A representation of the primary directory structure is as follows:
+
+\begin{verbatim}
+book-attention-monitor/
+|-- src/
+|   |-- analysis/
+|   |   |-- __init__.py
+|   |   |-- attention_analyzer.py
+|   |   `-- attention_monitor.py
+|   |-- camera/
+|   |   |-- __init__.py
+|   |   `-- camera_manager.py
+|   |-- models/
+|   |   |-- __init__.py
+|   |   |-- book_detector.py
+|   |   `-- gaze_estimator.py
+|   |-- model_weights/
+|   |   |-- L2CSNet_gaze360.pkl
+|   |   `-- last.pt (or your specific YOLO weights file)
+|   |-- session/
+|   |   |-- __init__.py
+|   |   `-- session_manager.py
+|   |-- utils/
+|   |   |-- __init__.py
+|   |   `-- helpers.py
+|   `-- __init__.py
+|
+|-- report/
+|   |-- index.md
+|   |-- 01_application_entry_point_.md
+|   |-- ... (other markdown report files)
+|
+|-- main.py
+|-- requirements.txt
+|-- attention_monitor.log
+`-- README.md
+\end{verbatim}
+
+A brief description of each key directory and file is provided below:
 
 \begin{description}
-  \item[\texttt{.env}] Environment variables file, used to configure environment-specific settings (API keys).
-  \item[\texttt{example\_papers/}] Directory containing example research papers generated by the system.
-  \item[\texttt{ai\_scientist/}] Directory containing the main modules of the AI Scientist application.
-  \item[\texttt{generate\_ideas.py}] Script to generate research ideas.
-  \item[\texttt{llm.py}] Script for fetching data from the Language Model API. % chktex 13
-  \item[\texttt{launch\_scientist.py}] Script to launch the AI Scientist application.
-  \item[\texttt{perform\_experiments.py}] Script to perform experiments.
-  \item[\texttt{perform\_writeup.py}] Script to perform write-up of results.
-  \item[\texttt{templates/}] Directory containing templates for various documents.
-  \item[\texttt{README.md}] Readme file providing an overview of the project.
-  \item[\texttt{results/}] Directory to store results of experiments.
-  \item[\texttt{LICENSE}] License file for the project.
-  \item[\texttt{requirements.txt}] List of Python dependencies required for the project.
+    \item[\texttt{book-attention-monitor/}] The root directory of the project.
+
+    \item[\texttt{src/}] This directory contains all the core source code for the application, organized into sub-modules:
+    \begin{itemize}
+        \item \texttt{analysis/}: Contains modules responsible for the higher-level analysis of visual cues.
+        \begin{itemize}
+            \item \texttt{attention\_monitor.py}: Implements the core logic for assessing user attention by integrating gaze and book detection data. It includes the gaze-book intersection algorithm.
+            \item \texttt{attention\_analyzer.py}: (As per your codebase structure, though its specific role might be integrated or complementary to \texttt{attention\_monitor.py}). May contain additional or alternative attention analysis logic.
+        \end{itemize}
+        \item \texttt{camera/}: Houses the module for managing camera input.
+        \begin{itemize}
+            \item \texttt{camera\_manager.py}: Handles webcam initialization, frame capture, and display functionalities.
+        \end{itemize}
+        \item \texttt{models/}: Contains the Python classes that wrap and utilize the deep learning models.
+        \begin{itemize}
+            \item \texttt{gaze\_estimator.py}: Implements the interface for the L2CS gaze estimation model, processing frames to extract gaze direction (pitch and yaw) and face bounding boxes.
+            \item \texttt{book\_detector.py}: Implements the interface for the custom-trained YOLOv12s model, responsible for detecting books and their states (open/closed) in the video frames. (Note: Your \texttt{Readme.md} mentioned \texttt{object\_detector.py}, but the uploaded code file is \texttt{book\_detector.py}).
+        \end{itemize}
+        \item \texttt{model\_weights/}: This crucial directory (implied by \texttt{main.py}) stores the pre-trained model weight files required by the system.
+        \begin{itemize}
+            \item \texttt{L2CSNet\_gaze360.pkl}: The weights for the L2CS gaze estimation model.
+            \item \texttt{last.pt} (or similar \texttt{.pt}, \texttt{.onnx} file): The weights for your custom-trained YOLOv12s book detection model.
+        \end{itemize}
+        \item \texttt{session/}: Manages the overall application session and workflow.
+        \begin{itemize}
+            \item \texttt{session\_manager.py}: Orchestrates the interactions between the camera, gaze estimation, book detection, and attention analysis modules. It handles the main processing loop and user interface updates.
+        \end{itemize}
+        \item \texttt{utils/}: Contains utility functions and helper scripts used across different modules.
+        \begin{itemize}
+            \item \texttt{helpers.py}: Provides common utility functions, potentially for tasks like frame resizing, logging setup, or other supporting operations.
+        \end{itemize}
+        \item \texttt{\_\_init\_\_.py}: Present in \texttt{src/} and its subdirectories, these files indicate to Python that the directories should be treated as packages, allowing for modular imports.
+    \end{itemize}
+
+    \item[\texttt{report/}] (Present in your uploaded files) This directory likely contains documentation and report files related to the project, such as the markdown files detailing different components of the system.
+
+    \item[\texttt{main.py}] The main entry point for the application. This script initializes all necessary components (like the camera manager, gaze estimator, and session manager) and starts the attention monitoring session.
+
+    \item[\texttt{requirements.txt}] Lists all the Python package dependencies required to run the project (e.g., OpenCV, PyTorch, Ultralytics, NumPy). Users can install these dependencies using pip.
+
+    \item[\texttt{attention\_monitor.log}] The log file where runtime information, warnings, and errors are recorded, as configured in \texttt{main.py}.
+
+    \item[\texttt{README.md}] Provides an overview of the project, features, setup instructions, and other relevant information for users and developers.
+
 \end{description}
+This structured organization facilitates code management, debugging, and potential future scalability of the project.
+
 
 \section{Data Analysis Techniques}
-This process of data analysis for the project aims at deriving meaningful insights with a high validity and reproducibility of the results. The most basic statistical methods such as mean, standard deviation, and confidence intervals are used to summarize and assess the outcomes of experiments. It is basically an easy foundational analysis of understanding central tendencies and variability.
-Comparison of the results from different experimental setups is used to assess the efficiency of various approaches. Comparative analysis includes evaluation against the baseline results or established benchmarks, which can provide an understanding of how different methodologies perform relative to one another.
-Data visualizations are crucial in the analytical process. The system develops plots, graphs, and heatmaps to depict trends, relationships, and anomalies in data. Libraries like Matplotlib or Seaborn are often used to create them in Python and enhance the interpretability of the results.\\
-Error and failure analysis is also performed when experiments do not deliver expected results. In such cases, potential flaws in design or execution can be pinpointed. It's a crucial feedback loop in ensuring that the research process stays adaptive and responsive for the improvements of the following iterations.\\
-Finally, to avoid losing clarity and academic value in the presentation of findings, the system uses natural language generation techniques for summarization. This ensures findings are communicated effectively, but they are also accessible to a wider audience while holding scholarly standards. Overall, this comprehensive data analysis process supports the goal of producing high-quality research outputs by the project.
+The process of determining a user's attention towards a physical book in this project involves a sequence of data analysis techniques applied to the incoming video stream. These techniques transform raw pixel data into meaningful intermediate representations (gaze direction, book location) and finally culminate in an attention status inference. The primary stages of data analysis are detailed below.
+
+\subsection{Frame Acquisition and Preprocessing}
+Each video frame captured by the \texttt{CameraManager} serves as the initial input. While extensive preprocessing is not a primary focus, frames are handled in a format (NumPy arrays) suitable for the subsequent deep learning models. Any necessary resizing or color space conversions (e.g., BGR to RGB, if required by specific models) are implicitly handled by the model inference pipelines or utility functions.
+
+\subsection{Gaze Vector Estimation}
+Once a frame is acquired, the \texttt{GazeEstimator} module, which encapsulates the L2CS model \cite{L2CSNet2022}, performs the following analysis:
+\begin{enumerate}
+    \item \textbf{Face Detection:} The L2CS pipeline first detects the user's face within the frame. This step is crucial as gaze estimation is typically performed relative to facial features. The output includes the bounding box coordinates of the detected face.
+    \item \textbf{Gaze Angle Regression:} Using the detected facial region, the L2CS model regresses the gaze angles, specifically pitch ($\theta_p$) and yaw ($\theta_y$). These angles represent the upward/downward and leftward/rightward orientation of the gaze, respectively.
+    \item \textbf{3D Gaze Vector Calculation:} The estimated pitch and yaw angles are then converted into a 3D unit vector, $\vec{G} = [G_x, G_y, G_z]$, representing the gaze direction in a 3D coordinate system relative to the face. This conversion, implemented within the \texttt{AttentionMonitor}, typically uses the following spherical to Cartesian coordinate transformation (assuming pitch $\phi$ and yaw $\lambda$ in radians):
+    \begin{equation}
+    \begin{aligned}
+        G_x &= \cos(\phi) \sin(\lambda) \\
+        G_y &= \sin(\phi) \\
+        G_z &= \cos(\phi) \cos(\lambda)
+    \end{aligned}
+    \end{equation}
+    This 3D vector is fundamental for subsequent geometric analysis. The origin of this vector is typically considered to be the center of the detected face bounding box.
+\end{enumerate}
+The output of this stage is a set of gaze parameters: pitch, yaw, the calculated 3D gaze vector, and the face's bounding box.
+
+\subsection{Book Detection and State Classification}
+Simultaneously or sequentially, the \texttt{AttentionMonitor} module utilizes its internal, custom-trained YOLOv12s model \cite{Redmon_YOLO_2016} to analyze the video frame for the presence of books:
+\begin{enumerate}
+    \item \textbf{Object Detection:} The YOLO model processes the input frame to identify instances of books.
+    \item \textbf{Bounding Box and Class Prediction:} For each detected book, the model outputs a bounding box (coordinates of the rectangle enclosing the book) and a class label. The classes relevant to this project are "open\_book" and "closed\_book," along with a confidence score for each detection.
+\end{enumerate}
+This stage provides crucial contextual information: whether a book is present, where it is located, and whether it is open (and thus likely being read).
+
+\subsection{Attention Inference via Gaze-Book Intersection}
+This is the core analytical step where data from gaze estimation and book detection are fused to infer the user's attention state. This logic resides within the \texttt{AttentionMonitor} module and follows a decision-making process, illustrated in Figure~\ref{fig:attention_inference_flowchart}.
+
+\begin{figure}[h!]
+\centering
+\resizebox{0.85\textwidth}{!}{%
+\begin{tikzpicture}[
+    node distance=0.8cm and 0.6cm,
+    decision/.style={diamond, draw, fill=blue!10, text width=4.5em, text centered, aspect=2, font=\footnotesize},
+    process/.style={rectangle, draw, fill=green!10, text width=7em, text centered, minimum height=2em, rounded corners, font=\footnotesize},
+    io/.style={rectangle, draw, fill=gray!10, text width=6em, text centered, minimum height=2em, font=\footnotesize},
+    terminator/.style={ellipse, draw, fill=red!10, text centered, minimum height=2em, font=\footnotesize},
+    arrow/.style={-Stealth, thick}
+]
+
+% Nodes
+\node[io] (start) {Frame \& Gaze Data};
+\node[decision, below=of start] (face_detected) {Face Detected?};
+\node[process, below left=1.2cm and -0.5cm of face_detected] (no_face) {Status: "No Face Detected"};
+\node[terminator, below=1cm of no_face] (end_no_face) {End Analysis};
+
+\node[process, below right=1.2cm and -0.5cm of face_detected] (yolo_book) {YOLO Book Detection};
+\node[decision, below=of yolo_book] (open_book_detected) {Open Book Detected?};
+\node[process, below left=1.2cm and -0.5cm of open_book_detected] (no_book) {Status: "No Book"}; 
+\node[terminator, below=1cm of no_book] (end_no_book) {End Analysis};
+
+\node[process, below right=1.2cm and -0.5cm of open_book_detected] (calc_gaze_origin) {Calculate Gaze Origin};
+\node[process, below=0.8cm of calc_gaze_origin] (calc_gaze_vector) {Calculate 3D Gaze Vector};
+\node[process, below=0.8cm of calc_gaze_vector] (get_book_bbox) {Get Book BBox};
+\node[decision, below=0.8cm of get_book_bbox] (intersection_test) {Ray-Book Intersection?};
+
+\node[process, below left=1.2cm and -0.5cm of intersection_test] (distracted) {Status: "Distracted"};
+\node[terminator, below=1cm of distracted] (end_distracted) {End Analysis};
+
+\node[process, below right=1.2cm and -0.5cm of intersection_test] (attentive) {Status: "Attentive"};
+\node[terminator, below=1cm of attentive] (end_attentive) {End Analysis};
+
+% Edges
+\draw[arrow] (start) -- (face_detected);
+\draw[arrow] (face_detected) -- node[left, scale=0.7] {No} (no_face);
+\draw[arrow] (no_face) -- (end_no_face);
+\draw[arrow] (face_detected) -- node[right, scale=0.7] {Yes} (yolo_book);
+\draw[arrow] (yolo_book) -- (open_book_detected);
+\draw[arrow] (open_book_detected) -- node[left, scale=0.7] {No} (no_book);
+\draw[arrow] (no_book) -- (end_no_book);
+\draw[arrow] (open_book_detected) -- node[right, scale=0.7] {Yes} (calc_gaze_origin);
+\draw[arrow] (calc_gaze_origin) -- (calc_gaze_vector);
+\draw[arrow] (calc_gaze_vector) -- (get_book_bbox);
+\draw[arrow] (get_book_bbox) -- (intersection_test);
+\draw[arrow] (intersection_test) -- node[left, scale=0.7] {No} (distracted);
+\draw[arrow] (distracted) -- (end_distracted);
+\draw[arrow] (intersection_test) -- node[right, scale=0.7] {Yes} (attentive);
+\draw[arrow] (attentive) -- (end_attentive);
+
+\end{tikzpicture}%
+}
+\caption{Flowchart of the Attention Inference Logic.}
+\label{fig:attention_inference_flowchart}
+\end{figure}
+
+The key steps in this inference are:
+\begin{enumerate}
+    \item \textbf{Prerequisite Checks:} The system first verifies if a face is detected. If not, attention cannot be assessed, and an appropriate status is set. Subsequently, it checks if an "open\_book" is detected by the internal YOLO model. If no open book is found, the user cannot be attentive to it in the intended manner.
+    \item \textbf{Gaze Ray Formulation:} If a face and an open book are detected, the 3D gaze vector (calculated as described in Section 3.4.2) is used. The origin of this gaze ray is the center of the detected face bounding box.
+    \item \textbf{Book Volume Definition:} The 2D bounding box of the detected "open\_book" is conceptually extended into a 3D volume. The \texttt{AttentionMonitor} code defines parameters \texttt{z\_near} and \texttt{z\_far} that establish a depth range for this volume, effectively treating the book as a cuboid in 3D space relative to the camera.
+    \item \textbf{Ray-Box Intersection Test:} The core analytical technique is a geometric ray-box intersection test. The algorithm checks if the calculated 3D gaze ray (originating from the user's face and pointing in the direction of their gaze) intersects with any of the six planes forming the conceptual 3D volume of the open book. This test is implemented in the \texttt{\_ray\_box\_intersection} method of the \texttt{AttentionMonitor}. An intersection is considered valid only if it occurs within the defined spatial boundaries of the book's 2D projection and within the \texttt{z\_near} and \texttt{z\_far} depth limits.
+    \item \textbf{Attention Status Determination:}
+    \begin{itemize}
+        \item If a face and an open book are detected, and the gaze ray intersects the book's 3D volume, the user is classified as "Attentive."
+        \item If a face and an open book are detected, but the gaze ray does not intersect the book's volume, the user is classified as "Distracted" (implying they are looking away from the detected open book).
+        \item Other statuses like "No face detected" or "No open book detected" are set if the prerequisites are not met.
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Output Generation}
+The final output of the data analysis pipeline for each frame is a structured dictionary containing the inferred attention status (e.g., attentive, distracted), a descriptive message, and the relevant intermediate data such as gaze pitch/yaw, gaze vector components, and bounding boxes for the face and book. This structured output is then used by the \texttt{SessionManager} to provide visual feedback to the user by overlaying this information on the displayed video stream.
+
+These data analysis techniques, combining deep learning model inferences with geometric reasoning, form the computational backbone of the attention monitoring system.
 
 \section{Ethical Considerations}
-This project recognizes the ethical concerns of automating scientific research and follows principles intended to mitigate risks and encourage responsible use. One of the key concerns is transparency: all outputs generated by automation, such as research results and reviews, are appropriately labeled as system-generated in order to maintain accountability. Transparency is essential to preserve trust in the research process.\\Another key emphasis is on the mitigation of bias. Proactive efforts in the form of mitigation are made regarding biases generated while coming up with ideas, while selecting the data and when interpreting results by using varied datasets and strict evaluation criteria to enhance objectivity from research outputs.\\Another area of concern is related to data privacy. When one uses external datasets, the project ensures compliance with data protection laws and ethical guidelines when not collecting or analyzing sensitive data or personal data. So, in such a regard, data privacy protects and respects individual rights and complies with the ethical and moral code in research practice. Safeguards are provided for the system to not create unethical or harmful research ideas. A review mechanism exists that flags potentially problematic outputs so that timely intervention and correction can be undertaken.\\Responsible deployment is a guiding principle of this project. The system is designed to assist and complement human researchers, not replace them. The outputs are designed to inspire and guide further exploration, not definitive conclusions. Through the emphasis on collaboration between automated systems and human expertise, the project promotes a responsible and ethical approach to scientific inquiry.
+The development and deployment of AI systems, particularly those involving human monitoring through computer vision, necessitate careful consideration of ethical implications. This project, while aimed at a beneficial purpose, acknowledges and has sought to address several key ethical aspects:
 
-\section{Limitations}
-While the project demonstrates significant advancements in automating research workflows, it is not without limitations. These challenges must be acknowledged to ensure a realistic understanding of the system's capabilities and areas for improvement.
 \begin{enumerate}
-    \item \textbf{Domain Dependency}\\
-    The effectiveness of the system is highly dependent on the availability of structured datasets and domain-specific knowledge. Certain fields may require additional customization to ensure that the outputs generated are meaningful and relevant. This dependency can limit the system's applicability across diverse research areas, necessitating tailored approaches for different domains.
+    \item \textbf{User Privacy:} The foremost ethical concern is the privacy of the user, as the system processes video data from their webcam, which includes images of their face and immediate environment.
+    \begin{itemize}
+        \item \textit{Mitigation:} A core design principle of this project is local processing. All video frame analysis, including face detection, gaze estimation, and book detection, is performed on the user's local machine. No image or video data is transmitted to external servers or stored by the application by default. This significantly reduces the risk of unauthorized access to sensitive visual data.
+    \end{itemize}
 
-    \item \textbf{Computational Constraints}\\
-    Running experiments, particularly those involving large datasets or complex simulations, can be resource-intensive and costly. The computational demands may pose challenges for users with limited access to high-performance computing resources, potentially restricting the system's widespread adoption.
+    \item \textbf{Informed Consent:} Users must be fully aware that they are being monitored and how the system operates.
+    \begin{itemize}
+        \item \textit{Mitigation:} The system is designed to be explicitly user-initiated. The user must actively start a monitoring session. Clear information regarding what the system monitors (gaze direction relative to a book, presence of a book) and the nature of the feedback provided should be made available to the user before they opt to use the system.
+    \end{itemize}
 
-    \item \textbf{Error Propagation}\\
-    Errors that occur in one stage of the research pipeline—such as experiment design—can propagate to subsequent stages, potentially compromising the final output. This risk highlights the importance of rigorous validation and quality control measures throughout the entire process to minimize the impact of errors.
+    \item \textbf{Data Security and Storage:} Even if data is processed locally, any temporary data or generated logs (if this feature were fully implemented for user review) must be handled securely.
+    \begin{itemize}
+        \item \textit{Mitigation:} The project's non-functional requirements emphasize data security. As no personal image data is persistently stored by default, the primary risk is minimized. If future versions implement session log storage for the user's own review, these logs should be stored locally and encrypted, or the user should be given explicit control over their storage and deletion.
+    \end{itemize}
 
-    \item \textbf{Limited Context Understanding}\\
-    Although the system is designed to generate results and reports, it lacks the nuanced understanding that a human researcher possesses. This limitation may result in overly simplistic interpretations of complex findings, underscoring the need for human oversight in interpreting results and drawing conclusions.
+    \item \textbf{Potential for Misinterpretation and Misuse:} Attention is a complex cognitive state, and inferring it solely from visual cues can lead to misinterpretations. There's also a risk that such technology could be misused for undue surveillance or judgment if applied in contexts without proper safeguards (e.g., mandatory use in evaluative settings).
+    \begin{itemize}
+        \item \textit{Mitigation:} This project is designed as an assistive tool for self-monitoring and improvement. The feedback aims to be informative rather than punitive. It is crucial to emphasize that the system provides an estimate of visual attention to a book, not a definitive measure of cognitive engagement or learning. Any broader application would require careful ethical review and context-specific guidelines \cite{Gupta_EthicalAIEd_2024}.
+    \end{itemize}
 
-    \item \textbf{Ethical and Safety Concerns}\\
-    There is an inherent risk of misuse, such as generating low-quality or misleading research outputs. Ensuring oversight and regulation is critical to mitigate these risks and uphold ethical standards in research. Continuous monitoring and evaluation mechanisms will be necessary to address potential ethical concerns associated with automated research generation.
-\end{enumerate} 
+    \item \textbf{Algorithmic Bias:} AI models can inherit biases from their training data, potentially leading to varied performance across different demographic groups (e.g., based on skin tone, facial features, or types of eyewear for gaze estimation).
+    \begin{itemize}
+        \item \textit{Mitigation:} While this project utilizes pre-trained models like L2CS and a custom-trained YOLO model, awareness of potential biases is important. The L2CS model was trained on diverse datasets to promote generalizability. For the custom book detector, efforts to diversify the self-captured training images were made. Continuous evaluation and retraining with more diverse data would be necessary for a production-level system to mitigate such biases further.
+    \end{itemize}
+
+    \item \textbf{Psychological Impact:} Continuous monitoring, even for self-improvement, could potentially induce anxiety or a feeling of being constantly evaluated in some users.
+    \begin{itemize}
+        \item \textit{Mitigation:} The system should be presented as a supportive tool, giving users control over when to use it. The nature of feedback should be constructive. Future iterations could explore user-configurable feedback sensitivity or modes that are less intrusive.
+    \end{itemize}
+
+    \item \textbf{Transparency and Explainability:} While deep learning models are often "black boxes," providing users with a basic understanding of how the system arrives at its conclusions can foster trust.
+    \begin{itemize}
+        \item \textit{Mitigation:} The system's logic (detecting gaze towards an open book) is relatively straightforward at a high level. Explaining this principle to users—that it checks if they are looking at the book they are reading—can enhance transparency.
+    \end{itemize}
+\end{enumerate}
+Adherence to these ethical principles is paramount for the responsible development and acceptance of attention monitoring technologies. This project strives to embed these considerations into its design philosophy, primarily through local processing and user-controlled operation.
+
+
+\section{Limitations of Methodology}
+The methodological choices made during the design and development of this Book Reading Attention Monitoring system, while enabling the creation of a functional prototype, also introduce certain limitations. These are distinct from the overall project limitations (discussed in Chapter 1) and pertain more to the constraints and characteristics of the chosen techniques and approaches:
+
+\begin{enumerate}
+    \item \textbf{Reliance on Appearance-Based Gaze Estimation:}
+    The choice of the L2CS model, an appearance-based gaze estimation technique, offers the advantage of working with standard webcams without specialized hardware. However, these methods are generally more susceptible to variations in lighting, head pose extremes, occlusions (e.g., glasses, hair), and individual facial morphology compared to intrusive, infra-red based eye trackers. The accuracy, while state-of-the-art for its category, may not achieve the precision of dedicated eye-tracking hardware, limiting the granularity of gaze information (e.g., pinpointing the exact word on a page).
+
+    \item \textbf{Custom Dataset Scope for Book Detection:}
+    The performance of the custom-trained YOLOv12s book detector is fundamentally linked to the quality, size, and diversity of the dataset created for its training. While efforts were made to diversify this dataset by sourcing images from Roboflow Universe and supplementing with self-captured images, the dataset may still not encompass the vast variety of book types, cover designs, sizes, conditions (new, worn), and reading environments. This limitation can affect the model's generalization capability when encountering books or settings significantly different from those in its training set.
+
+    \item \textbf{Simplifications in Attention Inference Logic:}
+    The core attention inference method relies on a geometric ray-box intersection between the estimated 3D gaze vector and the 3D bounding volume of a detected open book. This is a pragmatic approach but involves simplifications:
+    \begin{itemize}
+        \item \textbf{Binary Attention State:} The current logic primarily results in a binary classification (attentive/distracted per frame). It does not capture varying degrees or intensities of attention.
+        \item \textbf{Fixed Depth Assumption for Book Volume:} The \texttt{z\_near} and \texttt{z\_far} parameters used to define the book's 3D volume are heuristic and may not accurately represent the book's actual depth or orientation in all cases, potentially affecting intersection accuracy.
+        \item \textbf{Single Gaze Point Origin:} Using the face center as the gaze origin is an approximation.
+    \end{itemize}
+
+    \item \textbf{Exclusion of Other Attention Cues:}
+    The methodology primarily focuses on gaze direction and book presence as indicators of attention. Other potentially valuable visual cues (e.g., detailed facial expressions, subtle head movements indicative of engagement or confusion, body posture) or non-visual cues (e.g., physiological data, interaction patterns if it were an e-reader) are not incorporated in the current analysis. This limits the richness of the attention model.
+
+    \item \textbf{Lack of Formal User-Based Evaluation Protocol:}
+    While functional testing was performed, the current methodology does not include a formal quantitative evaluation with human participants to validate the accuracy of the attention inference against ground truth (e.g., self-reported attention, task performance). Such studies would be necessary to rigorously assess the system's real-world effectiveness and user acceptance.
+
+    \item \textbf{Real-Time Processing Constraints on Model Complexity:}
+    The objective of achieving real-time performance on local machines influences the choice of models. More complex, potentially more accurate, gaze estimation or object detection models might be too computationally expensive for the target deployment scenario. This practical constraint means a trade-off is often made between accuracy and processing speed.
+\end{enumerate}
+These methodological limitations provide context for the current system's capabilities and highlight areas where future research and development could refine the techniques and enhance the system's overall performance and scope.
